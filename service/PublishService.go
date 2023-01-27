@@ -14,7 +14,7 @@ type PublishList struct {
 	VideoList []repository.Video
 }
 
-func getPublishList(userId int64) (PublishList, error) {
+func GetPublishList(userId int64) (PublishList, error) {
 	publishList := PublishList{} // 发布列表对象
 	uservideos, err := userVideoDao.GetByUserId(userId)
 	if err != nil {
