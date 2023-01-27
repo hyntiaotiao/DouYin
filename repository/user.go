@@ -2,9 +2,10 @@ package repository
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 var (
