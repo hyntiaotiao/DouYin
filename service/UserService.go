@@ -10,9 +10,15 @@ var (
 	userDao = repository.NewUserDaoInstance()
 )
 
-func getByID(id int64) {
+func GetByID(id int64) (repository.User, error) {
 	//获取数据
 	//组装数据
+	user, err := userDao.GetById(id)
+	if err != nil {
+		log.Println("service.GetById error")
+		return user, err
+	}
+	return user, nil
 }
 
 func GetByUserName(username string) (repository.User, error) {

@@ -51,7 +51,9 @@ func JwtVerify(c *gin.Context) {
 	//过滤是否验证token
 	currentRouter := c.Request.RequestURI //获取当前路由 "
 	index := strings.Index(currentRouter, "?")
-	currentRouter = currentRouter[0:index] //去掉query参数
+	if index != -1 {
+		currentRouter = currentRouter[0:index] //去掉query参数
+	}
 	_, ok := NotNeedToken[currentRouter]
 	if ok { //不需要验证token
 		log.Println(currentRouter + "：当前路径不需要token验证")

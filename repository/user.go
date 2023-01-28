@@ -26,7 +26,7 @@ func NewUserDaoInstance() *UserDao {
 	return userDao
 }
 
-func (userDao *UserDao) GetByID(id int64) (User, error) {
+func (userDao *UserDao) GetById(id int64) (User, error) {
 	u := User{}
 	result := db.Where("id = ?", id).Take(&u)
 
@@ -62,5 +62,4 @@ func (userDao *UserDao) InsertUser(username string, password string) (User, erro
 	user := User{Username: username, Password: password}
 	result := db.Select("username", "password").Create(&user) // 通过数据的指针来创建
 	return user, result.Error
-
 }
