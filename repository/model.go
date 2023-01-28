@@ -43,12 +43,12 @@ func (UserVideo) TableName() string {
 // TableName 去除默认的表名复数，以video作为表名
 type Video struct {
 	ID             int64     `gorm:"column:id;primary_key" json:"id"`                                          // 视频id
-	Author         string    `gorm:"column:author;NOT NULL" json:"author"`                                     // 视频上传的作者名字
+	Author_id      int       `gorm:"column:author_id;NOT NULL" json:"author"`                                  // 视频上传的作者名字
 	Description    string    `gorm:"column:description" json:"description"`                                    // 视频简介
 	PlayUrl        string    `gorm:"column:play_url;NOT NULL" json:"play_url"`                                 // 视频播放地址
-	CoverUrl       string    `gorm:"column:cover_url;NOT NULL" json:"cover_url"`                               // 视频封面地址
-	Title          string    `gorm:"column:title;NOT NULL" json:"title"`                                       // 标题
-	FavouriteCount int       `gorm:"column:favourite_count;NOT NULL" json:"favourite_count"`                   // 点赞量
+	CoverUrl       string    `gorm:"column:cover_url;NOT NULL" json:"cover_url"`                               // 标题
+	FavouriteCount int       `gorm:"column:favourite_count;NOT NULL" json:"favourite_count"`                   // 视频封面地址
+	Title          string    `gorm:"column:title;NOT NULL" json:"title"`                                       // 点赞量
 	PlayCounts     int       `gorm:"column:play_counts;NOT NULL" json:"play_counts"`                           // 播放次数
 	CommentCount   int       `gorm:"column:comment_count;NOT NULL" json:"comment_count"`                       // 评论量
 	CreateTime     time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"` // 创建时间

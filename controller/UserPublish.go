@@ -63,7 +63,12 @@ func Publish(c *gin.Context) {
 		// 数据存入数据库
 		playUrl := file.Filename + ".mp4"
 		coverUrl := file.Filename + ".jpg"
-		err = service.AddVideo(playUrl, coverUrl, title)
+		authorId, exists := c.Get("UserId")
+		if !exists {
+			PublishVideoError(c, err.Error())
+			continue
+		}
+		err = service.AddVideo(authorId.(int), playUrl, coverUrl, title)
 		if err != nil {
 			PublishVideoError(c, err.Error())
 		}

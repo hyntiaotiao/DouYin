@@ -20,11 +20,12 @@ func NewvideoDaoInstance() *VideoDao {
 }
 
 // 新增视频
-func (videoDao *VideoDao) Addvideo(playUrl string, coverUrl string, title string) error {
+func (videoDao *VideoDao) Addvideo(authorId int, playUrl string, coverUrl string, title string) error {
 	newVideo := &Video{
-		CoverUrl: coverUrl,
-		PlayUrl:  playUrl,
-		Title:    title,
+		Author_id: authorId,
+		CoverUrl:  coverUrl,
+		PlayUrl:   playUrl,
+		Title:     title,
 	}
 	videoResult := db.Create(newVideo)
 	return videoResult.Error
