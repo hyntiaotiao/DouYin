@@ -40,6 +40,7 @@ func (UserVideo) TableName() string {
 	return "user_video"
 }
 
+// TableName 去除默认的表名复数，以video作为表名
 type Video struct {
 	ID             int64     `gorm:"column:id;primary_key" json:"id"`                                          // 视频id
 	Author         string    `gorm:"column:author;NOT NULL" json:"author"`                                     // 视频上传的作者名字
@@ -53,6 +54,10 @@ type Video struct {
 	CreateTime     time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"` // 创建时间
 	UpdateTime     time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"update_time"` // 更新时间
 	IsDeleted      int       `gorm:"column:is_deleted;default:0;NOT NULL" json:"is_deleted"`                   // 是否删除(0-未删, 1-已删)
+}
+
+func (Video) TableName() string {
+	return "video"
 }
 
 // Fans 粉丝表
