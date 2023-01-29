@@ -1,4 +1,4 @@
-# 2023.1.27更新
+# 2023.1.29更新
 ## 更新的结构
 
 DOUYIN
@@ -6,11 +6,10 @@ DOUYIN
     - PublishList 返回发布列表
 
 - repository
-    - user_video 查找用户的视频发布列表
+    - video video的CRUD，包括返回一个用户所有的发布列表
 
 - service
     - PublishService 发布列表的service层
 
-## 补充
-- 发布列表还需要调用查询视频信息的接口
-- 剩下的代码28号再弄，今天有点事情要出去
+## 待完成
+返回发布列表同时携带User数据

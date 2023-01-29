@@ -5,25 +5,13 @@ import (
 )
 
 var (
-	userVideoDao = repository.NewUserVideoDaoInstance()
-	// videoDao = repository.NewVideoDaoInstance()
+	videoDao = repository.NewVideoDaoInstance()
 )
 
-type PublishList struct {
-	userId    int64
-	VideoList []repository.Video
-}
-
-func GetPublishList(userId int64) (PublishList, error) {
-	publishList := PublishList{} // 发布列表对象
-	uservideos, err := userVideoDao.GetByUserId(userId)
+func GetPublishList(userId int64) ([]repository.Video, error) {
+	videos, err := videoDao.GetAllByAuthorID(userId)
 	if err != nil {
-		return publishList, err
+		return videos, err
 	}
-	publishList.userId = userId
-	for _, uservideo := range uservideos {
-		videoId := uservideo.VideoID
-		println(videoId) // 查询video
-	}
-	return publishList, nil
+	return videos, nil
 }

@@ -27,8 +27,10 @@ func PublishList(c *gin.Context) {
 		return
 	}
 	var response = &publishListResponse{}
-	response.PublishList, _ = service.GetPublishList(request.UserID)
-	// response.User
+	userID := request.UserID
+	response.PublishList, _ = service.GetPublishList(userID)
+	// response.User 请求user对象
+	response.User.Id = userID
 	response.StatusCode = 0
 	response.StatusMsg = "success"
 	c.JSON(200, response)

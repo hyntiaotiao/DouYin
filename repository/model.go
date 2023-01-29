@@ -42,7 +42,7 @@ func (UserVideo) TableName() string {
 
 type Video struct {
 	ID             int64     `gorm:"column:id;primary_key" json:"id"`                                          // 视频id
-	Author         string    `gorm:"column:author;NOT NULL" json:"author"`                                     // 视频上传的作者名字
+	AuthorID       string    `gorm:"column:author_id;NOT NULL" json:"author_id"`                               // 视频上传的作者ID
 	Description    string    `gorm:"column:description" json:"description"`                                    // 视频简介
 	PlayUrl        string    `gorm:"column:play_url;NOT NULL" json:"play_url"`                                 // 视频播放地址
 	CoverUrl       string    `gorm:"column:cover_url;NOT NULL" json:"cover_url"`                               // 视频封面地址
