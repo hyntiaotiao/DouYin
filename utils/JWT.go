@@ -31,10 +31,10 @@ const TokenExpireDuration = time.Hour * 24 * 180
 var Secret = []byte("DouYin HelloWorld")
 
 // GenToken 传入用户ID生成token，有效期半年
-func GenToken(USerID int64) (string, error) {
+func GenToken(UserID int64) (string, error) {
 	// 创建一个我们自己的声明
 	c := MyClaims{
-		USerID, // 自定义字段
+		UserID, // 自定义字段
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(), // 过期时间(半年)
 			Issuer:    "ADuiDuiDui",                               // 签发人（啊对对队）

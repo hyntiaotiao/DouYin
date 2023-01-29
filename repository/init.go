@@ -29,7 +29,7 @@ func init() {
 	//配置MySQL连接参数
 	username := "root"   //账号
 	password := "123456" //密码
-	host := "127.0.0.1"  //数据库地址，可以是Ip或者域名
+	host := "localhost"  //数据库地址，可以是Ip或者域名
 	port := 3306         //数据库端口
 	Dbname := "douyin"   //数据库名
 	timeout := "10s"     //连接超时，10秒
