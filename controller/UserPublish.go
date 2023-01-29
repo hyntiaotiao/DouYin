@@ -40,7 +40,7 @@ func Publish(c *gin.Context) {
 		return
 	}
 	files := form.File["data"]
-	// 选择多个文件上传的情况
+	// 多个文件 文件信息计入数据库
 	for _, file := range files {
 		ext := filepath.Ext(file.Filename) // 得到后缀
 		// 上传合法性判断
