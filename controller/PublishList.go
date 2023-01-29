@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"DouYIn/repository"
 	"DouYIn/service"
 	"log"
 
@@ -14,7 +15,8 @@ type publishListRequest struct {
 
 type publishListResponse struct {
 	Response
-	PublishList service.PublishList `json:"publishList" binding:"required"`
+	User        User               `json:"user" binding:"required"`
+	PublishList []repository.Video `json:"publishList" binding:"required"`
 }
 
 func PublishList(c *gin.Context) {
@@ -26,6 +28,7 @@ func PublishList(c *gin.Context) {
 	}
 	var response = &publishListResponse{}
 	response.PublishList, _ = service.GetPublishList(request.UserID)
+	// response.User
 	response.StatusCode = 0
 	response.StatusMsg = "success"
 	c.JSON(200, response)
