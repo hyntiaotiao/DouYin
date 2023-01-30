@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"DouYIn/common"
 	"DouYIn/service"
 	"DouYIn/utils"
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ type UserLoginRequest struct {
 }
 
 type UserLoginResponse struct {
-	Response
+	common.Response
 	UserID int64  `json:"user_id" binding:"required"`
 	Token  string `json:"token" binding:"required"`
 }
