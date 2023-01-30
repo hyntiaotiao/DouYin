@@ -15,13 +15,13 @@ type MyClaims struct {
 }
 
 // NotNeedToken 这里填入不需要token验证的路径
-var NotNeedToken = make(map[string]struct{}) //这里用空结构体加map实现了一个集合（空结构体不占内存）
+var NotNeedToken = make(map[string]int) //0不需要验证，1表示可选（有则验证，没有则过）
 
 func init() {
 	//将不需要验证token的路径添加到集合中
-	NotNeedToken["/douyin/user/register/"] = struct{}{}
-	NotNeedToken["/douyin/user/login/"] = struct{}{}
-	NotNeedToken["/douyin/feed/"] = struct{}{}
+	NotNeedToken["/douyin/user/register/"] = 0
+	NotNeedToken["/douyin/user/login/"] = 0
+	NotNeedToken["/douyin/feed/"] = 1
 }
 
 // TokenExpireDuration 设置过期时间
@@ -51,16 +51,24 @@ func JwtVerify(c *gin.Context) {
 	//过滤是否验证token
 	currentRouter := c.Request.RequestURI //获取当前路由 "
 	index := strings.Index(currentRouter, "?")
-	currentRouter = currentRouter[0:index] //去掉query参数
-	_, ok := NotNeedToken[currentRouter]
-	if ok { //不需要验证token
+	if index != -1 {
+		currentRouter = currentRouter[0:index] //去掉query参数
+	}
+	status, ok := NotNeedToken[currentRouter]
+	if ok && status == 0 { //不需要验证token
 		log.Println(currentRouter + "：当前路径不需要token验证")
 		return
 	}
-	token := c.Query("token")
+	//尝试获取token
+	var token string
+	token = c.Query("token")
 	if token == "" {
 		token = c.PostForm("token")
 	}
+	if ok && status == 1 && token == "" { //可选，且当前请求没有携带token
+		return
+	}
+	//必须验证token
 	if token == "" {
 		panic("未携带token")
 	}
@@ -68,7 +76,7 @@ func JwtVerify(c *gin.Context) {
 	if err != nil {
 		panic("invalid token")
 	}
-	c.Set("UserID", claims.UserID) //后续可以使用c.get(UserID)获取到用户ID
+	c.Set("UserID", claims.UserID) //后续可以使用c.Get(UserID)获取到用户ID
 }
 
 // ParseToken 解析JWT

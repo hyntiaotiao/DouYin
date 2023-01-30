@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"DouYIn/common"
 	"DouYIn/service"
 	"DouYIn/utils"
 	"github.com/gin-gonic/gin"
@@ -14,13 +15,14 @@ type UserRegisterRequest struct {
 }
 
 type UserRegisterResponse struct {
-	Response
+	common.Response
 	UserID int64  `json:"user_id" binding:"required"`
 	Token  string `json:"token" binding:"required"`
 }
 
 func Register(c *gin.Context) {
 	var request UserRegisterRequest
+	//接收参数
 	if err := c.Bind(&request); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		log.Println("request参数绑定失败")
@@ -30,6 +32,7 @@ func Register(c *gin.Context) {
 	UserID, error := service.Register(request.UserName, request.Password)
 	if error != nil {
 		log.Println(error)
+		return
 	}
 	token, error := utils.GenToken(UserID)
 	if error != nil {
@@ -37,7 +40,7 @@ func Register(c *gin.Context) {
 	}
 	response.UserID = UserID
 	response.Token = token
-	response.StatusCode = 0
+	response.StatusCode = 0 //0成功 1失败
 	response.StatusMsg = "success"
 	c.JSON(200, response)
 }
