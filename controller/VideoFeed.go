@@ -9,7 +9,7 @@ import (
 
 type VideoFeedRequest struct {
 	LatestTime int64  `form:"latest_time" json:"latest_time" binding:"omitempty"`
-	token      string `form:"token" json:"token" binding:"omitempty"`
+	Token      string `form:"token" json:"token" binding:"omitempty"`
 }
 
 type VideoFeedResponse struct {

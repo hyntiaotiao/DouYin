@@ -59,9 +59,6 @@ type Video struct {
 	IsDeleted      int       `gorm:"column:is_deleted;default:0;NOT NULL" json:"is_deleted"` // (0-, 1-)
 }
 
-
-
-
 // 点赞表(当用户对某个视屏点赞，则添加一条数据。取消点赞则删除对应数据)
 type Favorite struct {
 	ID         int64     `gorm:"column:id;AUTO_INCREMENT;primary_key" json:"id"`

@@ -20,3 +20,5 @@ func FavouriteAction(userId int64, videoId int64, actionType int32) error {
 	}
 	return nil
 }
+
+// 查询Like接口

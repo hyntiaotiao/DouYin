@@ -1,17 +1,13 @@
 package service
 
 import (
-	"DouYIn/repository"
+	"DouYIn/common"
 )
 
-var (
-	videoDao = repository.NewVideoDaoInstance()
-)
-
-func GetPublishList(userId int64) ([]repository.Video, error) {
-	videos, err := videoDao.GetAllByAuthorID(userId)
+func PublishList(userId int64) ([]common.Video, error) {
+	videoList, err := videoDao.GetPublishList(userId)
 	if err != nil {
-		return videos, err
+		return videoList, err
 	}
-	return videos, nil
+	return videoList, nil
 }

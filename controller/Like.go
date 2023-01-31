@@ -4,13 +4,14 @@ import (
 	"DouYIn/common"
 	"DouYIn/service"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type LikeRequest struct {
-	Token      string `form:"video_id" json:"token" binding:"required"`
+	Token      string `form:"token" json:"token" binding:"required"`
 	VideoID    int64  `form:"video_id" json:"video_id" binding:"required"`
 	ActionType int32  `form:"action_type" json:"action_type" binding:"required"`
 }
