@@ -63,5 +63,4 @@ func (userDao *UserDao) InsertUser(username string, password string) (User, erro
 	user := User{Username: username, Password: password}
 	result := db.Select("username", "password").Create(&user) // 通过数据的指针来创建
 	return user, result.Error
-
 }

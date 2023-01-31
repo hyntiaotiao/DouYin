@@ -2,12 +2,13 @@ package repository
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"log"
-	"os"
 )
 
 // 定义全局的db对象，我们执行数据库操作主要通过他实现。
@@ -27,12 +28,12 @@ var newLogger = logger.New(
 // 包初始化函数，golang特性，每个包初始化的时候会自动执行init函数，这里用来初始化gorm。
 func init() {
 	//配置MySQL连接参数
-	username := "root"  //账号
-	password := "root"  //密码
-	host := "127.0.0.1" //数据库地址，可以是Ip或者域名
-	port := 3306        //数据库端口
-	Dbname := "douyin"  //数据库名
-	timeout := "10s"    //连接超时，10秒
+	username := "root"     //账号
+	password := "123456"   //密码
+	host := "39.101.73.74" //数据库地址，可以是Ip或者域名
+	port := 3306           //数据库端口
+	Dbname := "douyin"     //数据库名
+	timeout := "10s"       //连接超时，10秒
 
 	//拼接下dsn参数, dsn格式可以参考上面的语法，这里使用Sprintf动态拼接dsn参数，因为一般数据库连接参数，我们都是保存在配置文件里面，需要从配置文件加载参数，然后拼接dsn。
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s", username, password, host, port, Dbname, timeout)
