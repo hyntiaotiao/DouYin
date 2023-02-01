@@ -8,7 +8,7 @@ import (
 )
 
 type UserInfoRequest struct {
-	userId int64  `form:"userId" json:"userId"`
+	userId int64  `form:"userId" json:"user_id"`
 	token  string `form:"token" json:"token"`
 }
 
@@ -18,12 +18,13 @@ type UserInfoResponse struct {
 }
 
 func UserInfo(c *gin.Context) {
-	userId, err := strconv.Atoi(c.Query("userId"))
+	userId, err := strconv.Atoi(c.Query("user_id"))
 	var response = &UserInfoResponse{}
 	user, err := service.GetByID(int64(userId))
 	if err != nil {
 		log.Println(err)
-		c.JSON(404, "该用户不存在！")
+		c.JSON(404, Response{StatusCode: 1, StatusMsg: "该用户不存在！"})
+		return
 	}
 	userVO := UserVO{}
 	userVO.Id = user.ID
