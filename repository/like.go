@@ -2,8 +2,10 @@ package repository
 
 import (
 	"errors"
-	"gorm.io/gorm"
+	"log"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 type LikeDao struct{}
@@ -23,8 +25,8 @@ func NewLikeDaoInstance() *LikeDao {
 	return likeDao
 }
 
-func (likeDao *LikeDao) GetLikeByUserIDAndVideoID(UserID int64, VideoId int64) (User, error) {
-	f := User{}
+func (likeDao *LikeDao) GetLikeByUserIDAndVideoID(UserID int64, VideoId int64) (Favorite, error) {
+	f := Favorite{}
 	result := db.Where("user_id = ? and video_id = ?", UserID, VideoId).Take(&f)
 	//错误处理
 	if result.Error != nil {
@@ -39,16 +41,63 @@ func (likeDao *LikeDao) GetLikeByUserIDAndVideoID(UserID int64, VideoId int64) (
 
 // InsertLike 插入点赞数据
 func (likeDao *LikeDao) InsertLike(UserID int64, VideoId int64) error {
-	favorite := Favorite{UserID: UserID, VideoID: VideoId}
-	result := db.Select("user_id", "video_id").Create(&favorite) // 通过数据的指针来创建
-	return result.Error
+	// 一个事务
+	tx := db.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("回滚")
+			tx.Rollback()
+		}
+	}()
+
+	if tx.Error != nil {
+		log.Println("事务开启异常")
+	}
+
+	favorite := &Favorite{UserID: UserID, VideoID: VideoId}
+	if err := tx.Select("user_id", "video_id").Create(&favorite).Error; err != nil {
+		log.Println("添加点赞回滚！错误信息：", err)
+		tx.Rollback()
+	}
+	video := &Video{ID: VideoId}
+	if err := tx.Model(&video).UpdateColumn("favourite_count", gorm.Expr("favourite_count + 1")).Error; err != nil {
+		log.Println("更新视频点赞数回滚！错误信息：", err)
+		tx.Rollback()
+	}
+	tx.Commit()
+	return nil
 }
 
 // DeleteLike 取消点赞
 func (likeDao *LikeDao) DeleteLike(UserID int64, VideoId int64) error {
-	favorite := Favorite{}
-	result := db.Where("user_id = ? and video_id = ?", UserID, VideoId).Delete(&favorite) // 通过数据的指针来创建
-	return result.Error
+	// 一个事务
+	tx := db.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("回滚")
+			tx.Rollback()
+		}
+	}()
+
+	if tx.Error != nil {
+		log.Println("事务开启异常")
+	}
+
+	favorite := &Favorite{VideoID: VideoId, UserID: UserID}
+	if err := tx.Where("user_id = ? and video_id = ?", UserID, VideoId).Delete(&favorite).Error; err != nil {
+		log.Println("取消点赞回滚！错误信息：", err)
+		tx.Rollback()
+	}
+
+	video := &Video{ID: VideoId}
+	if err := tx.Model(&video).Where("favourite_count != 0").UpdateColumn("favourite_count", gorm.Expr("favourite_count - 1")).Error; err != nil {
+		log.Println("更新视频点赞数回滚！错误信息：", err)
+		tx.Rollback()
+	}
+	tx.Commit()
+	return nil
 }
 
 //// GetLikeInfo 根据userId,videoId查询点赞信息

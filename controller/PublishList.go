@@ -9,19 +9,19 @@ import (
 	_ "github.com/go-playground/validator/v10"
 )
 
-type publishListRequest struct {
+type PublishListRequest struct {
 	UserID int64  `form:"user_id" json:"user_id" binding:"required"`
 	Token  string `form:"token" json:"token" binding:"required" `
 }
 
-type publishListResponse struct {
+type PublishListResponse struct {
 	common.Response
 	PublishList []common.Video `json:"video_list" binding:"required"`
 }
 
 func PublishList(c *gin.Context) {
-	var request publishListRequest
-	var response = &publishListResponse{}
+	var request PublishListRequest
+	var response = &PublishListResponse{}
 	if err := c.Bind(&request); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		log.Println("request参数绑定失败")

@@ -2,9 +2,7 @@ package repository
 
 import (
 	"DouYIn/common"
-	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"sync"
 )
@@ -14,7 +12,7 @@ var (
 	videoDao  *VideoDao
 )
 
-var result []struct {
+var video_result []struct {
 	Id            int64  `json:"id"`
 	AuthorId      int64  `json:"author_id"`
 	Name          string `json:"name"`
@@ -42,19 +40,6 @@ func NewVideoDaoInstance() *VideoDao {
 	return videoDao
 }
 
-func (videoDao *VideoDao) InsertVideo(video *Video) error {
-	result := db.Create(&video) // 通过数据的指针来创建
-	if result.Error != nil {
-		log.Println("VideoDao InsertVideo ERROR") //控制台打印日志
-		return errors.New("发生未知错误")
-	}
-	return nil
-}
-
-func (videoDao *VideoDao) UpdateVideo(video *Video) error {
-	return db.Save(video).Error
-}
-
 func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.Video, error) {
 	VideoListSQL := " select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favourite_count," +
 		" video.author_id,user.username as name,user.follow_count,user.follower_count," +
@@ -63,21 +48,21 @@ func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.Video, error) {
 		" from user join video" +
 		" on video.author_id = user.id" +
 		" order by video.create_time"
-	db.Raw(VideoListSQL).Scan(&result)
-	var VideoList = make([]common.Video, len(result))
-	for i := 0; i < len(result); i++ {
-		VideoList[i].Author.Id = result[i].AuthorId
-		VideoList[i].Author.FollowCount = result[i].FollowCount
-		VideoList[i].Author.FollowerCount = result[i].FollowerCount
-		VideoList[i].Author.Name = result[i].Name
-		VideoList[i].Author.IsFollow = result[i].IsFollow
-		VideoList[i].Id = result[i].Id
-		VideoList[i].PlayUrl = result[i].PlayUrl
-		VideoList[i].CoverUrl = result[i].CoverUrl
-		VideoList[i].IsFavorite = result[i].IsFavorite
-		VideoList[i].Title = result[i].Title
-		VideoList[i].CommentCount = result[i].CommentCount
-		VideoList[i].FavoriteCount = result[i].FavoriteCount
+	db.Raw(VideoListSQL).Scan(&video_result)
+	var VideoList = make([]common.Video, len(video_result))
+	for i := 0; i < len(video_result); i++ {
+		VideoList[i].Author.Id = video_result[i].AuthorId
+		VideoList[i].Author.FollowCount = video_result[i].FollowCount
+		VideoList[i].Author.FollowerCount = video_result[i].FollowerCount
+		VideoList[i].Author.Name = video_result[i].Name
+		VideoList[i].Author.IsFollow = video_result[i].IsFollow
+		VideoList[i].Id = video_result[i].Id
+		VideoList[i].PlayUrl = video_result[i].PlayUrl
+		VideoList[i].CoverUrl = video_result[i].CoverUrl
+		VideoList[i].IsFavorite = video_result[i].IsFavorite
+		VideoList[i].Title = video_result[i].Title
+		VideoList[i].CommentCount = video_result[i].CommentCount
+		VideoList[i].FavoriteCount = video_result[i].FavoriteCount
 	}
 	return VideoList, nil
 }
@@ -107,23 +92,23 @@ func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]
 		" on author_id = user.id" +
 		" where UNIX_TIMESTAMP(video.create_time)>" + strconv.FormatInt(LatestTime, 10) +
 		" order by time limit 1," + strconv.Itoa(amount-1)
-	db.Raw(VideoListSQL).Scan(&result)
+	db.Raw(VideoListSQL).Scan(&video_result)
 	var NextTime int64
 	db.Raw(NextTimeSQL).Scan(&NextTime)
-	var VideoList = make([]common.Video, len(result))
-	for i := 0; i < len(result); i++ {
-		VideoList[i].Author.Id = result[i].AuthorId
-		VideoList[i].Author.FollowCount = result[i].FollowCount
-		VideoList[i].Author.FollowerCount = result[i].FollowerCount
-		VideoList[i].Author.Name = result[i].Name
-		VideoList[i].Author.IsFollow = result[i].IsFollow
-		VideoList[i].Id = result[i].Id
-		VideoList[i].PlayUrl = result[i].PlayUrl
-		VideoList[i].CoverUrl = result[i].CoverUrl
-		VideoList[i].IsFavorite = result[i].IsFavorite
-		VideoList[i].Title = result[i].Title
-		VideoList[i].CommentCount = result[i].CommentCount
-		VideoList[i].FavoriteCount = result[i].FavoriteCount
+	var VideoList = make([]common.Video, len(video_result))
+	for i := 0; i < len(video_result); i++ {
+		VideoList[i].Author.Id = video_result[i].AuthorId
+		VideoList[i].Author.FollowCount = video_result[i].FollowCount
+		VideoList[i].Author.FollowerCount = video_result[i].FollowerCount
+		VideoList[i].Author.Name = video_result[i].Name
+		VideoList[i].Author.IsFollow = video_result[i].IsFollow
+		VideoList[i].Id = video_result[i].Id
+		VideoList[i].PlayUrl = video_result[i].PlayUrl
+		VideoList[i].CoverUrl = video_result[i].CoverUrl
+		VideoList[i].IsFavorite = video_result[i].IsFavorite
+		VideoList[i].Title = video_result[i].Title
+		VideoList[i].CommentCount = video_result[i].CommentCount
+		VideoList[i].FavoriteCount = video_result[i].FavoriteCount
 	}
 	return VideoList, NextTime, nil
 }
