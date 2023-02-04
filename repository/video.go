@@ -26,6 +26,17 @@ func NewVideoDaoInstance() *VideoDao {
 	return videoDao
 }
 
+func (videoDao *VideoDao) Addvideo(authorId int64, playUrl string, coverUrl string, title string) error {
+	newVideo := &Video{
+		AuthorID: authorId,
+		CoverUrl: coverUrl,
+		PlayUrl:  playUrl,
+		Title:    title,
+	}
+	videoResult := db.Create(newVideo)
+	return videoResult.Error
+}
+
 func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]common.Video, int64, error) {
 	var result []struct {
 		Id            int64  `json:"id"`
