@@ -29,3 +29,8 @@ func (fansDao *FansDao) HasFollowed(bloggerId int64, fansId int64) bool {
 	}
 	return false
 }
+func (fansDao *FansDao) SelectFolloweeList(userId int64) []User {
+	var followeeList []User
+	db.Debug().Table("user").Where("id in (?)", db.Table("fans").Select("blogger_id").Where("fans_id = ?", userId)).Find(&followeeList)
+	return followeeList
+}

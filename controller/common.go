@@ -48,9 +48,9 @@ type MessagePushEvent struct {
 }
 
 type UserVO struct {
-	Id            int64  `json:"id"`
-	Name          string `json:"name"`
-	FollowCount   int64  `json:"follow_count"`
-	FollowerCount int64  `json:"follower_count"`
-	IsFollow      bool   `json:"is_follow"`
+	Id            int64  `json:"id"`             //用户B的id
+	Name          string `json:"name"`           //用户B的名字
+	FollowCount   int64  `json:"follow_count"`   //用户B的关注数
+	FollowerCount int64  `json:"follower_count"` //用户B的粉丝数
+	IsFollow      bool   `json:"is_follow"`      //当前用户是否关注了用户B
 }
