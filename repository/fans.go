@@ -29,8 +29,17 @@ func (fansDao *FansDao) HasFollowed(bloggerId int64, fansId int64) bool {
 	}
 	return false
 }
+
+// SelectFolloweeList 返回关注列表
 func (fansDao *FansDao) SelectFolloweeList(userId int64) []User {
 	var followeeList []User
 	db.Debug().Table("user").Where("id in (?)", db.Table("fans").Select("blogger_id").Where("fans_id = ?", userId)).Find(&followeeList)
 	return followeeList
+}
+
+// SelectFollowerList 返回粉丝列表
+func (fansDao *FansDao) SelectFollowerList(userId int64) []User {
+	var followerList []User
+	db.Debug().Table("user").Where("id in (?)", db.Table("fans").Select("fans_id").Where("blogger_id = ?", userId)).Find(&followerList)
+	return followerList
 }
