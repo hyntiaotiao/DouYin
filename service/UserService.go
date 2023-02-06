@@ -10,6 +10,19 @@ var (
 	userDao = repository.NewUserDaoInstance()
 )
 
+func getByID(id int64) {
+	//获取数据
+	//组装数据
+}
+
+func GetByUserName(username string) (repository.User, error) {
+	user, err := userDao.GetByUsername(username)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 func Register(Username string, Password string) (int64, error) {
 	user, err := userDao.InsertUser(Username, Password)
 	if err != nil {

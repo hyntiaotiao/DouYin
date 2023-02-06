@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"DouYIn/common"
 	"DouYIn/service"
 	"log"
 	"strconv"
@@ -10,26 +9,26 @@ import (
 )
 
 type UserInfoRequest struct {
-	UserId int64  `form:"user_id" json:"user_id"`
-	Token  string `form:"token" json:"token"`
+	userId int64  `form:"userId" json:"user_id"`
+	token  string `form:"token" json:"token"`
 }
 
 type UserInfoResponse struct {
-	common.Response
-	User common.UserVO
+	Response
+	User UserVO
 }
 
 func UserInfo(c *gin.Context) {
-	userId, err := strconv.Atoi(c.Query("user_id"))
+	//targetId 要查看的目标用户的id
+	targetId, err := strconv.Atoi(c.Query("user_id"))
 	var response = &UserInfoResponse{}
-	user, err := service.GetUserByID(int64(userId))
+	user, err := service.GetByID(int64(targetId))
 	if err != nil {
 		log.Println(err)
-		response := common.Response{StatusCode: 1, StatusMsg: "用户不存在"}
-		c.JSON(404, response)
+		c.JSON(404, Response{StatusCode: 1, StatusMsg: "该用户不存在！"})
 		return
 	}
-	userVO := common.UserVO{}
+	userVO := UserVO{}
 	userVO.Id = user.ID
 	userVO.Name = user.Username
 	userVO.FollowCount = int64(user.FollowCount)
@@ -39,10 +38,10 @@ func UserInfo(c *gin.Context) {
 	// 		a.如果是未登录的用户，is_follow的值应该为false；
 	// 		b.如果是已经登录的用户，is_follow的值根据fans表中的数据决定
 	curUserId, _ := c.Get("UserID")
-	if curUserId == userId {
+	if curUserId == targetId {
 		userVO.IsFollow = false
 	} else {
-		userVO.IsFollow = service.HasFollowed(int64(userId), curUserId.(int64))
+		userVO.IsFollow = service.HasFollowed(int64(targetId), curUserId.(int64))
 	}
 
 	response.StatusCode = 0

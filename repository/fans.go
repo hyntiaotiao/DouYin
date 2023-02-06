@@ -29,3 +29,28 @@ func (fansDao *FansDao) HasFollowed(bloggerId int64, fansId int64) bool {
 	}
 	return false
 }
+
+// SelectFolloweeList 返回关注列表
+func (fansDao *FansDao) SelectFolloweeList(userId int64) []User {
+	var followeeList []User
+	db.Debug().Table("user").Where("id in (?)", db.Table("fans").Select("blogger_id").Where("fans_id = ?", userId)).Find(&followeeList)
+	return followeeList
+}
+
+// SelectFollowerList 返回粉丝列表
+func (fansDao *FansDao) SelectFollowerList(userId int64) []User {
+	var followerList []User
+	db.Debug().Table("user").Where("id in (?)", db.Table("fans").Select("fans_id").Where("blogger_id = ?", userId)).Find(&followerList)
+	return followerList
+}
+
+// SelectFriendList 返回好友列表
+func (fansDao *FansDao) SelectFriendList(userId int64) []User {
+	var friendList []User
+	db.Debug().Table("user u").
+		Select("u.*").
+		Joins("join fans f1 on u.id = f1.blogger_id").
+		Joins("Join fans f2 on u.id = f2.fans_id").
+		Where("f1.fans_id = ? and f2.blogger_id = ?", userId, userId).Find(&friendList)
+	return friendList
+}
