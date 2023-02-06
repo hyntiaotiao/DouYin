@@ -29,7 +29,7 @@ func NewUserDaoInstance() *UserDao {
 
 // GetById 根据用户id查询user对象
 // 如果不存在对应的用户，则方法返回的error非空
-func (userDao *UserDao) GetById(id int64) (User, error) {
+func (userDao *UserDao) GetByID(id int64) (User, error) {
 	u := User{}
 	result := db.Where("id = ?", id).Take(&u)
 

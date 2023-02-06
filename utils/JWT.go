@@ -2,11 +2,12 @@ package utils
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 type MyClaims struct {
@@ -51,9 +52,11 @@ func JwtVerify(c *gin.Context) {
 	//过滤是否验证token
 	currentRouter := c.Request.RequestURI //获取当前路由 "
 	index := strings.Index(currentRouter, "?")
-	currentRouter = currentRouter[0:index] //去掉query参数
-	_, ok := NotNeedToken[currentRouter]
-	if ok { //不需要验证token
+	if index != -1 {
+		currentRouter = currentRouter[0:index] //去掉query参数
+	}
+	status, ok := NotNeedToken[currentRouter]
+	if ok && status == 0 { //不需要验证token
 		log.Println(currentRouter + "：当前路径不需要token验证")
 		return
 	}

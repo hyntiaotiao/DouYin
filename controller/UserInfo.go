@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"DouYIn/common"
 	"DouYIn/service"
 	"log"
 	"strconv"
@@ -9,13 +10,13 @@ import (
 )
 
 type UserInfoRequest struct {
-	userId int64  `form:"userId" json:"user_id"`
-	token  string `form:"token" json:"token"`
+	UserId int64  `form:"userId" json:"user_id"`
+	Token  string `form:"token" json:"token"`
 }
 
 type UserInfoResponse struct {
-	Response
-	User UserVO
+	common.Response
+	User common.UserVO
 }
 
 func UserInfo(c *gin.Context) {
@@ -25,10 +26,10 @@ func UserInfo(c *gin.Context) {
 	user, err := service.GetByID(int64(targetId))
 	if err != nil {
 		log.Println(err)
-		c.JSON(404, Response{StatusCode: 1, StatusMsg: "该用户不存在！"})
+		c.JSON(404, common.Response{StatusCode: 1, StatusMsg: "该用户不存在！"})
 		return
 	}
-	userVO := UserVO{}
+	userVO := common.UserVO{}
 	userVO.Id = user.ID
 	userVO.Name = user.Username
 	userVO.FollowCount = int64(user.FollowCount)
