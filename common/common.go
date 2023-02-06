@@ -35,6 +35,8 @@ type Message struct {
 	Id         int64  `json:"id"`
 	Content    string `json:"content"`
 	CreateTime string `json:"create_time"`
+	FromUserId int64  `json:"from_user_id"`
+	ToUserID   int64  `json:"to_user_id"`
 }
 
 type MessageSendEvent struct {

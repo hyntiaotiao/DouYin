@@ -3,7 +3,6 @@ package service
 import (
 	"DouYIn/common"
 	"DouYIn/repository"
-	"fmt"
 	"log"
 )
 
@@ -30,6 +29,6 @@ func Feed(amount int, UserId any, LatestTime ...int64) ([]common.Video, int64, e
 	if len(videos) < amount { //说明在指定投稿时间之后视屏已经不足amount个了，所以把nextTime设置为0，下次从头开始查询
 		nextTime = 0
 	}
-	fmt.Println(videos[0])
+	// fmt.Println(videos[0])
 	return videos, nextTime, error
 }

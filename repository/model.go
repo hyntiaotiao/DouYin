@@ -68,5 +68,14 @@ type Favorite struct {
 	UpdateTime time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"update_time"`
 }
 
+// 消息表
+type Message struct {
+	ID int64 `gorm:"column:id;AUTO_INCREMENT;primary_key" json:"id"`
+	SendUserID int64 `gorm:"column:send_user_id;NOT NULL" json:"send_user_id"`
+	ReceiveUserID int64 `gorm:"column:receive_user_id;NOT NULL" json:"receive_user_id"`
+	Content string `gorm:"column:content;NOT NULL" json:"content"`
+	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"`
+}
+
 
 
