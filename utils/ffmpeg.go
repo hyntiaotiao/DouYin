@@ -70,7 +70,7 @@ func (v *Video2Image) GetQueryString() (ret string, err error) {
 		err = errors.New("输入输出路径未指定")
 		return
 	}
-	ret = "D:\\newproject\\go\\douyin\\video\\utils"
+	ret = "D:\\newproject\\go\\douyin\\video\\utils\\ffmpeg-5.1.2-essentials_build\\bin\\ffmpeg.exe"
 	// ret = config.Info.FfmpegPath
 	ret += paramJoin(inputVideoPathOption, v.InputPath)
 	ret += paramJoin(formatToImageOption, "image2")

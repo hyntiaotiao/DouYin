@@ -6,9 +6,9 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.1
+	github.com/qiniu/go-sdk/v7 v7.14.0
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.3
-	github.com/qiniu/go-sdk/v7 v7.14.0
 )
 
 require (
@@ -28,6 +28,7 @@ require (
 	github.com/ugorji/go/codec v1.2.8 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect

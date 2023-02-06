@@ -33,6 +33,8 @@ func (videoDao *VideoDao) Addvideo(authorId int64, playUrl string, coverUrl stri
 		PlayUrl:  playUrl,
 		Title:    title,
 	}
+	// 重复视频校验（没做）
+
 	videoResult := db.Create(newVideo)
 	return videoResult.Error
 }
