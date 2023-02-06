@@ -43,3 +43,14 @@ func (fansDao *FansDao) SelectFollowerList(userId int64) []User {
 	db.Debug().Table("user").Where("id in (?)", db.Table("fans").Select("fans_id").Where("blogger_id = ?", userId)).Find(&followerList)
 	return followerList
 }
+
+// SelectFriendList 返回好友列表
+func (fansDao *FansDao) SelectFriendList(userId int64) []User {
+	var friendList []User
+	db.Debug().Table("user u").
+		Select("u.*").
+		Joins("join fans f1 on u.id = f1.blogger_id").
+		Joins("Join fans f2 on u.id = f2.fans_id").
+		Where("f1.fans_id = ? and f2.blogger_id = ?", userId, userId).Find(&friendList)
+	return friendList
+}

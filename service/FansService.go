@@ -19,3 +19,8 @@ func FindFolloweeList(userId int64) []repository.User {
 func FindFollowerList(userId int64) []repository.User {
 	return fansDao.SelectFollowerList(userId)
 }
+
+// FindFriendList 查询用户的好友列表
+func FindFriendList(userId int64) []repository.User {
+	return fansDao.SelectFriendList(userId)
+}

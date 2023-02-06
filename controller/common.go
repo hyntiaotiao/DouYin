@@ -53,4 +53,5 @@ type UserVO struct {
 	FollowCount   int64  `json:"follow_count"`   //用户B的关注数
 	FollowerCount int64  `json:"follower_count"` //用户B的粉丝数
 	IsFollow      bool   `json:"is_follow"`      //当前用户是否关注了用户B
+	Avatar        string `json:"avatar"`         //用户B的头像Url
 }
