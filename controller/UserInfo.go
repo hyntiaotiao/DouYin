@@ -3,14 +3,15 @@ package controller
 import (
 	"DouYIn/common"
 	"DouYIn/service"
-	"github.com/gin-gonic/gin"
 	"log"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserInfoRequest struct {
-	userId int64  `form:"userId" json:"userId"`
-	token  string `form:"token" json:"token"`
+	UserId int64  `form:"user_id" json:"user_id"`
+	Token  string `form:"token" json:"token"`
 }
 
 type UserInfoResponse struct {

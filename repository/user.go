@@ -2,9 +2,10 @@ package repository
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 var (
@@ -28,7 +29,7 @@ func NewUserDaoInstance() *UserDao {
 
 func (userDao *UserDao) GetByID(id int64) (User, error) {
 	u := User{}
-	result := db.Where("id = ?", id).Take(&u)
+	result := Db.Where("id = ?", id).Take(&u)
 
 	//错误处理
 	if result.Error != nil {
@@ -44,7 +45,7 @@ func (userDao *UserDao) GetByID(id int64) (User, error) {
 
 func (userDao *UserDao) GetByUsername(username string) (User, error) {
 	u := User{}
-	result := db.Where("username = ?", username).Take(&u)
+	result := Db.Where("username = ?", username).Take(&u)
 
 	//错误处理
 	if result.Error != nil {
@@ -60,6 +61,33 @@ func (userDao *UserDao) GetByUsername(username string) (User, error) {
 
 func (userDao *UserDao) InsertUser(username string, password string) (User, error) {
 	user := User{Username: username, Password: password}
-	result := db.Select("username", "password").Create(&user) // 通过数据的指针来创建
+	result := Db.Select("username", "password").Create(&user) // 通过数据的指针来创建
 	return user, result.Error
+}
+
+// FollowDesc 关注减一
+func (userDao *UserDao) FollowDesc(UserID int64) error {
+	re := Db.Model(&User{}).Where("id = ?", UserID).UpdateColumn("follow_count", gorm.Expr("follow_count - ?", 1))
+	return re.Error
+}
+
+// FollowInsc 关注加一
+
+func (userDao *UserDao) FollowInsc(UserID int64) error {
+	re := Db.Model(&User{}).Where("id = ?", UserID).UpdateColumn("follow_count", gorm.Expr("follow_count + ?", 1))
+	return re.Error
+}
+
+// FollowDesc 粉丝减一
+
+func (userDao *UserDao) FollowerDesc(UserID int64) error {
+	re := Db.Model(&User{}).Where("id = ?", UserID).UpdateColumn("follower_count", gorm.Expr("follower_count - ?", 1))
+	return re.Error
+}
+
+// FollowDesc 粉丝减一
+
+func (userDao *UserDao) FollowerInsc(UserID int64) error {
+	re := Db.Model(&User{}).Where("id = ?", UserID).UpdateColumn("follower_count", gorm.Expr("follower_count + ?", 1))
+	return re.Error
 }

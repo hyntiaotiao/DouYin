@@ -4,13 +4,14 @@ import (
 	"DouYIn/common"
 	"DouYIn/service"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type LikeRequest struct {
-	Token      string `form:"video_id" json:"token" binding:"required"`
+	Token      string `form:"token" json:"token" binding:"required"`
 	VideoID    int64  `form:"video_id" json:"video_id" binding:"required"`
 	ActionType int32  `form:"action_type" json:"action_type" binding:"required"`
 }
@@ -32,7 +33,7 @@ func FavoriteAction(c *gin.Context) {
 	}
 	UserIDAny, _ := c.Get("UserID")
 	UserID, _ := strconv.ParseInt(fmt.Sprintf("%v", UserIDAny), 0, 64)
-	err := service.FavouriteAction(UserID, request.VideoID, request.ActionType)
+	err := service.FavoriteAction(UserID, request.VideoID, request.ActionType)
 	if err != nil {
 		log.Println("赞操作失败", err)
 		response.StatusCode = 1

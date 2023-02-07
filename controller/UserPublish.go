@@ -54,21 +54,21 @@ func Publish(c *gin.Context) {
 		open, err := file.Open()
 		if err != nil {
 			PublishVideoError(c, "上传文件数据有误，无法读取")
-			continue
+			return
 		}
 		defer open.Close()
 		size := file.Size
 		bytes := make([]byte, size)
 		if _, err := open.Read(bytes); err != nil {
 			PublishVideoError(c, "文件读取错误")
-			continue
+			return
 		}
 
 		ext := filepath.Ext(file.Filename) // 得到后缀
 		// 上传合法性判断
 		if _, ok := videoIndexMap[ext]; !ok {
 			PublishVideoError(c, "视频格式不支持")
-			continue
+			return
 		}
 
 		index := strings.LastIndex(file.Filename, ".")
@@ -83,9 +83,10 @@ func Publish(c *gin.Context) {
 
 		// 上传到数据库
 		err = service.AddVideo(bytes, videoName, coverName, UserID, title)
-		if err != nil {
-			PublishVideoError(c, err.Error())
-		}
+		//if err != nil {
+		//	PublishVideoError(c, err.Error())
+		//	return
+		//}
 
 		// 制作视频封面
 		fileUrl := "http://rphysx900.hn-bkt.clouddn.com/" + videoName
@@ -94,14 +95,16 @@ func Publish(c *gin.Context) {
 			// "s": "320x240", "pix_fmt": "rgb24", "t": "3", "r": "3"
 			Output(tmpCoverUrl, ffmpeg.KwArgs{"s": "368x208", "pix_fmt": "rgb24", "t": "3", "r": "3"}).
 			OverWriteOutput().ErrorToStdOut().Run()
-		if err != nil {
-			PublishVideoError(c, err.Error())
-		}
+		//if err != nil {
+		//	PublishVideoError(c, err.Error())
+		//	return
+		//}
 
 		// 文件转换为字节流文件
 		openFile, err := os.Open(tmpCoverUrl)
 		if err != nil {
 			PublishVideoError(c, err.Error())
+			return
 		}
 		defer openFile.Close()
 		var data []byte
@@ -111,6 +114,7 @@ func Publish(c *gin.Context) {
 			n, err := openFile.Read(buf)
 			if err != nil && err != io.EOF {
 				PublishVideoError(c, err.Error())
+				return
 			}
 			if n == 0 {
 				break
@@ -124,6 +128,7 @@ func Publish(c *gin.Context) {
 		err = os.Remove(tmpCoverUrl)
 		if err != nil {
 			PublishVideoError(c, err.Error())
+			return
 		}
 	}
 
@@ -136,5 +141,5 @@ func Publish(c *gin.Context) {
 
 // 返回错误
 func PublishVideoError(c *gin.Context, msg string) {
-	c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: msg})
+	c.JSON(http.StatusInternalServerError, common.Response{StatusCode: 1, StatusMsg: msg})
 }

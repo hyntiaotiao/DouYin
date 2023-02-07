@@ -2,17 +2,18 @@ package repository
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"log"
-	"os"
 )
 
 // 定义全局的db对象，我们执行数据库操作主要通过他实现。
 // 不用担心协程并发使用同样的db对象会共用同一个连接，db对象在调用他的方法的时候会从数据库连接池中获取新的连接
-var db *gorm.DB
+var Db *gorm.DB
 
 var newLogger = logger.New(
 	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
@@ -48,8 +49,8 @@ func init() {
 	if err != nil {
 		panic("连接数据库失败, error=" + err.Error())
 	}
-	db = _db
-	sqlDB, _ := db.DB()
+	Db = _db
+	sqlDB, _ := Db.DB()
 
 	//设置数据库连接池参数
 	sqlDB.SetMaxOpenConns(100) //设置数据库连接池最大连接数

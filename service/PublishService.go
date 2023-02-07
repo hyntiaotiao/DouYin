@@ -1,6 +1,7 @@
 package service
 
 import (
+	"DouYIn/common"
 	"context"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/sms/bytes"
@@ -57,4 +58,12 @@ func UploadDataToOSS(data []byte, videoName string) error {
 		return err
 	}
 	return nil
+}
+
+func PublishList(userId int64) ([]common.Video, error) {
+	videoList, err := videoDao.GetPublishList(userId)
+	if err != nil {
+		return videoList, err
+	}
+	return videoList, nil
 }
