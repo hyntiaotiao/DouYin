@@ -6,18 +6,14 @@
 
 DOUYIN
 - controller
-    - PublishList 返回发布列表
-    - Comment 返回评论列表、发布和删除评论
-    - UserInfo 原有的request的json格式与给定的接口格式不一致
+    - MessageChat: 返回聊天记录
 
 - repository
-    - video 在原有的video.go上做了修改
-    - comment 评论的数据库CRUD
-    - like 插入和删除like的事务操作
+    - message: message对应的user1和user2的返回
+    - model: message的model
+    - video: 更改错误的字段
 
 - service
-    - PublishService 发布列表的service层
-    - CommentService 评论的service层
-    - LikeService 注释了查询操作，只保留插入和删除操作
+    - MessageService: message service层
 
-main.go 开放"/publish/list/"、"/comment/action/"、"/comment/list/"接口
+main.go 开放"/message/chat/"接口
