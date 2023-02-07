@@ -3,6 +3,7 @@ package repository
 import (
 	"DouYIn/common"
 	"fmt"
+	"gorm.io/gorm"
 	"strconv"
 	"sync"
 )
@@ -29,14 +30,21 @@ func NewVideoDaoInstance() *VideoDao {
 func (videoDao *VideoDao) Addvideo(authorId int64, playUrl string, coverUrl string, title string) error {
 	newVideo := &Video{
 		AuthorID: authorId,
-		CoverUrl: coverUrl,
-		PlayUrl:  playUrl,
+		CoverUrl: "http://" + coverUrl,
+		PlayUrl:  "http://" + playUrl,
 		Title:    title,
 	}
 	// 重复视频校验（没做）
-
-	videoResult := db.Create(newVideo)
-	return videoResult.Error
+	err := db.Transaction(func(tx *gorm.DB) error {
+		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
+		if err := tx.Create(newVideo).Error; err != nil {
+			// 返回任何错误都会回滚事务
+			return err
+		}
+		// 返回 nil 提交事务
+		return nil
+	})
+	return err
 }
 
 func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]common.Video, int64, error) {

@@ -48,10 +48,7 @@ func UploadDataToOSS(data []byte, videoName string) error {
 	cfg := storage.Config{}
 	formUploader := storage.NewFormUploader(&cfg)
 	ret := storage.PutRet{}
-	//recorder, err := storage.NewFileRecorder(os.TempDir())
-	//if err != nil {
-	//	return err
-	//}
+
 	putExtra := storage.PutExtra{}
 	dataLen := int64(len(data))
 
