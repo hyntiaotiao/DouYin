@@ -41,7 +41,7 @@ func NewVideoDaoInstance() *VideoDao {
 }
 
 func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.Video, error) {
-	VideoListSQL := " select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favourite_count," +
+	VideoListSQL := " select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favorite_count," +
 		" video.author_id,user.username as name,user.follow_count,user.follower_count," +
 		" IFNULL( (SELECT 1 FROM	favorite WHERE favorite.user_id = " + fmt.Sprintf("%v", UserID) + " and favorite.video_id = video.id LIMIT 1) , false ) as is_favorite," +
 		" IFNULL( (SELECT 1 FROM	fans WHERE fans.fans_id = " + fmt.Sprintf("%v", UserID) + " and fans.blogger_id = 1 LIMIT 1) , false ) as is_follow" +
@@ -71,14 +71,14 @@ func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]
 	var VideoListSQL string
 	var NextTimeSQL string
 	if UserID == -1 {
-		VideoListSQL = "select video.id , video.play_url,video.cover_url,video.favourite_count,video.comment_count,video.title, video.author_id,user.username as name,user.follow_count," +
+		VideoListSQL = "select video.id , video.play_url,video.cover_url,video.favorite_count,video.comment_count,video.title, video.author_id,user.username as name,user.follow_count," +
 			" user.follower_count" +
 			" from video inner join user" +
 			" on author_id = user.id" +
 			" where UNIX_TIMESTAMP(video.create_time) > " + strconv.FormatInt(LatestTime, 10) +
 			" order by video.create_time limit " + strconv.Itoa(amount)
 	} else {
-		VideoListSQL = " select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favourite_count," +
+		VideoListSQL = " select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favorite_count," +
 			" video.author_id,user.username as name,user.follow_count,user.follower_count," +
 			" IFNULL( (SELECT 1 FROM	favorite WHERE favorite.user_id = " + fmt.Sprintf("%v", UserID) + " and favorite.video_id = video.id LIMIT 1) , false ) as is_favorite," +
 			" IFNULL( (SELECT 1 FROM	fans WHERE fans.fans_id = " + fmt.Sprintf("%v", UserID) + " and fans.blogger_id = 1 LIMIT 1) , false ) as is_follow" +

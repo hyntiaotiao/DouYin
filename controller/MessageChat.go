@@ -31,6 +31,7 @@ func MessageChat(c *gin.Context) {
 	temp_user1, _ := c.Get("UserID")
 	if temp_user1 != nil {
 		user1 := temp_user1.(int64)
+		log.Println("user1: ", user1)
 		user2 := request.ToUserID
 		messageList, err := service.MessageChat(user1, user2)
 		if err != nil {
