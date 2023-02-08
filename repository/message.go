@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"DouYIn/common"
+	"fmt"
 	"sync"
 )
 
@@ -31,4 +33,14 @@ func (messageDao *MessageDao) SendMessage(FromID int64, ToID int64, Content stri
 	}
 	result := Db.Select("content", "send_user_id", "receive_user_id").Create(&message)
 	return result.Error
+}
+
+func (messageDao *MessageDao) GetChat(userID1 int64, userID2 int64) ([]common.MessageVO, error) {
+	var messageList []common.MessageVO
+	messageListSQL := " select id,send_user_id as from_user_id,receive_user_id as to_user_id,content,create_time from message" +
+		" where (send_user_id = " + fmt.Sprintf("%v", userID1) + " and receive_user_id = " + fmt.Sprintf("%v", userID2) + ")" +
+		" or (send_user_id = " + fmt.Sprintf("%v", userID2) + " and receive_user_id = " + fmt.Sprintf("%v", userID1) + ")" +
+		" order by create_time desc"
+	Db.Raw(messageListSQL).Scan(&messageList)
+	return messageList, nil
 }

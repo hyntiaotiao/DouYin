@@ -10,11 +10,11 @@ import (
 )
 
 var (
-	accessKey = "XRPWoJnixwJaw_9Skz8VHUFMAb9tuiQqjiSNjsYl"
-	secretKey = "QeWXT7tqjruO-xmPn1u5Ndu2EWlWMVftF_Smv-ki"
-	bucket    = "douyin-video-1433"
+	accessKey = "vgYCBSRxShp4bwVOIZuUimER384doipByuzQQihD"
+	secretKey = "IhawLo1bsWkmfpcbrDkz0LBIV1Op5bhN49VkcpHo"
+	bucket    = "douyin-hyn"
 	// 域名
-	domain = "rphysx900.hn-bkt.clouddn.com"
+	domain = "rpqu9mxxr.hn-bkt.clouddn.com"
 )
 
 func AddVideo(data []byte, videoName string, coverName string, authorId int64, title string) error {
@@ -30,6 +30,7 @@ func AddVideo(data []byte, videoName string, coverName string, authorId int64, t
 	//// 获取文件md5值,用于校验重复视频
 	//sum := md5.Sum(data)
 	//videoMD5 := fmt.Sprintf("%x", sum)
+
 	// 存入数据库
 	err = videoDao.Addvideo(authorId, videoUrl, coverUrl, title)
 	if err != nil {
@@ -39,7 +40,7 @@ func AddVideo(data []byte, videoName string, coverName string, authorId int64, t
 
 }
 
-// 将本地文件上传到七牛云oss中
+// UploadDataToOSS 将本地文件上传到七牛云oss中
 func UploadDataToOSS(data []byte, videoName string) error {
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,

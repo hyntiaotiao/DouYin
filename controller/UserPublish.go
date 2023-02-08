@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -89,7 +90,7 @@ func Publish(c *gin.Context) {
 		//}
 
 		// 制作视频封面
-		fileUrl := "http://rphysx900.hn-bkt.clouddn.com/" + videoName
+		fileUrl := "http://rpqu9mxxr.hn-bkt.clouddn.com/" + videoName
 		tmpCoverUrl := "tmpCover/" + coverName
 		err = ffmpeg.Input(fileUrl, ffmpeg.KwArgs{"ss": "1"}).
 			// "s": "320x240", "pix_fmt": "rgb24", "t": "3", "r": "3"
@@ -106,7 +107,6 @@ func Publish(c *gin.Context) {
 			PublishVideoError(c, err.Error())
 			return
 		}
-		defer openFile.Close()
 		var data []byte
 		buf := make([]byte, 1024)
 		for {
@@ -125,9 +125,10 @@ func Publish(c *gin.Context) {
 
 		// 视频封面上传到oss
 		service.UploadDataToOSS(data, coverName)
+		openFile.Close()
 		err = os.Remove(tmpCoverUrl)
 		if err != nil {
-			PublishVideoError(c, err.Error())
+			log.Println("临时图片移除失败")
 			return
 		}
 	}
