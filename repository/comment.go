@@ -28,13 +28,13 @@ func (commentDao *CommentDao) GetCommentList(videoID int64) ([]Comment, error) {
 	commentListSQL := " select comment.id,comment.content,comment.create_time,comment.publisher_id from comment" +
 		" where comment.video_id = " + fmt.Sprintf("%v", videoID) +
 		" order by comment.create_time desc"
-	db.Raw(commentListSQL).Scan(&comments)
+	Db.Raw(commentListSQL).Scan(&comments)
 	return comments, nil
 }
 
 func (commentDao *CommentDao) InsertComment(comment *Comment) error {
 	// 一个事务
-	tx := db.Begin()
+	tx := Db.Begin()
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -46,7 +46,7 @@ func (commentDao *CommentDao) InsertComment(comment *Comment) error {
 	if tx.Error != nil {
 		log.Println("事务开启异常")
 	}
-	if err := tx.Select("content", "publisher_id", "video_id", "favourite_count").Create(comment).Error; err != nil {
+	if err := tx.Select("content", "publisher_id", "video_id", "favorite_count").Create(comment).Error; err != nil {
 		log.Println("插入评论回滚！")
 		tx.Rollback()
 	}
@@ -61,7 +61,7 @@ func (commentDao *CommentDao) InsertComment(comment *Comment) error {
 
 func (commentDao *CommentDao) DeleteComment(comment *Comment) error {
 	// 一个事务
-	tx := db.Begin()
+	tx := Db.Begin()
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -74,7 +74,7 @@ func (commentDao *CommentDao) DeleteComment(comment *Comment) error {
 		log.Println("事务开启异常")
 	}
 
-	if err := db.Where("id = ?", comment.ID).Delete(comment).Error; err != nil {
+	if err := Db.Where("id = ?", comment.ID).Delete(comment).Error; err != nil {
 		log.Println("删除评论回滚！")
 		tx.Rollback()
 	}

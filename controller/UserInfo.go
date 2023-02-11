@@ -10,7 +10,7 @@ import (
 )
 
 type UserInfoRequest struct {
-	UserId int64  `form:"userId" json:"user_id"`
+	UserId int64  `form:"user_id" json:"user_id"`
 	Token  string `form:"token" json:"token"`
 }
 

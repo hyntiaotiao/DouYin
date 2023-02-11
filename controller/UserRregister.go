@@ -32,6 +32,7 @@ func Register(c *gin.Context) {
 	UserID, error := service.Register(request.UserName, request.Password)
 	if error != nil {
 		log.Println(error)
+		c.JSON(400, &common.Response{StatusCode: 1, StatusMsg: error.Error()})
 		return
 	}
 	token, error := utils.GenToken(UserID)

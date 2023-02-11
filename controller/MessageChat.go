@@ -15,7 +15,7 @@ type MessageChatRequest struct {
 
 type MessageChatResponse struct {
 	common.Response
-	MessageList []common.Message `form:"message_list" json:"message_list"`
+	MessageList []common.MessageVO `form:"message_list" json:"message_list"`
 }
 
 func MessageChat(c *gin.Context) {
@@ -38,16 +38,7 @@ func MessageChat(c *gin.Context) {
 			log.Println(err)
 		}
 
-		messageList_ := make([]common.Message, len(messageList))
-		for i := range messageList {
-			message := messageList[i]
-			messageList_[i].Content = message.Content
-			messageList_[i].CreateTime = message.CreateTime.Format("2006-01-02 15:04:05")
-			messageList_[i].FromUserId = user1
-			messageList_[i].ToUserID = user2
-			messageList_[i].Id = message.ID
-		}
-		response.MessageList = messageList_
+		response.MessageList = messageList
 		response.StatusCode = 0
 		response.StatusMsg = "success"
 		c.JSON(200, response)

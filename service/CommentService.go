@@ -8,7 +8,7 @@ var (
 	commentDao = repository.NewCommentDaoInstance()
 )
 
-// FavouriteAction 点赞与取消赞操作
+// CommentList  点赞与取消赞操作
 func CommentList(videoId int64) ([]repository.Comment, error) {
 	commentList, error := commentDao.GetCommentList(videoId)
 	return commentList, error
@@ -16,7 +16,7 @@ func CommentList(videoId int64) ([]repository.Comment, error) {
 
 func CommentAction(action_type int32, comment_id int64, video_id int64, publisher_id int64, comment_context string) (*repository.Comment, error) {
 	// 插入评论
-	comment := &repository.Comment{ID: comment_id, VideoID: video_id, PublisherID: publisher_id, Content: comment_context, AuthorID: 1, FavouriteCount: 0}
+	comment := &repository.Comment{ID: comment_id, VideoID: video_id, PublisherID: publisher_id, Content: comment_context, AuthorID: 1, FavoriteCount: 0}
 	var err error
 	if action_type == 1 {
 		err = commentDao.InsertComment(comment)

@@ -3,6 +3,7 @@ package controller
 import (
 	"DouYIn/common"
 	"DouYIn/service"
+	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,13 @@ type FriendUser struct {
 type FriendListResponse struct {
 	common.Response
 	UserList []FriendUser `json:"user_list"`
+}
+
+type RelationActionRequest struct {
+	Token    string `form:"token" json:"token" binding:"required"`
+	ToUserID int64  `form:"to_user_id" json:"to_user_id" binding:"required"`
+	// 1关注 2取消
+	ActionType int `form:"action_type" json:"action_type" binding:"required"`
 }
 
 // FollowList 获取登录用户关注的所有用户列表，两种情况下调用该接口：
@@ -111,5 +119,31 @@ func FriendList(c *gin.Context) {
 		friendUser.MsgType = 0
 		response.UserList = append(response.UserList, friendUser)
 	}
+	c.JSON(200, response)
+}
+
+// RelationAction 关注
+func RelationAction(c *gin.Context) {
+	var request RelationActionRequest
+	var response = &common.Response{}
+	//参数绑定
+	if err := c.Bind(&request); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		log.Println("request参数绑定失败")
+		return
+	}
+	//获取粉丝ID（即当前登录用户）
+	FansID, _ := c.Get("UserID")
+	log.Println(FansID.(int64), request.ToUserID, request.ActionType)
+	err := service.FollowRelationAction(request.ToUserID, FansID.(int64), request.ActionType)
+	if err != nil {
+		log.Println("关注/取关操作失败", err)
+		response.StatusCode = 1
+		response.StatusMsg = "关注/取关操作失败"
+		c.JSON(400, response)
+		return
+	}
+	response.StatusCode = 0
+	response.StatusMsg = "success"
 	c.JSON(200, response)
 }

@@ -33,7 +33,7 @@ func FavoriteAction(c *gin.Context) {
 	}
 	UserIDAny, _ := c.Get("UserID")
 	UserID, _ := strconv.ParseInt(fmt.Sprintf("%v", UserIDAny), 0, 64)
-	err := service.FavouriteAction(UserID, request.VideoID, request.ActionType)
+	err := service.FavoriteAction(UserID, request.VideoID, request.ActionType)
 	if err != nil {
 		log.Println("赞操作失败", err)
 		response.StatusCode = 1

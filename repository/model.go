@@ -15,9 +15,10 @@ type Comment struct {
 	AuthorID       int64     `gorm:"column:author_id;NOT NULL" json:"author_id"`             // 视屏作者的id
 	PublisherID    int64     `gorm:"column:publisher_id;NOT NULL" json:"publisher_id"`       // 评论发布者的id
 	Content        string    `gorm:"column:content;NOT NULL" json:"content"`
-	FavouriteCount int       `gorm:"column:favourite_count;NOT NULL" json:"favourite_count"`
+	FavoriteCount int       `gorm:"column:favorite_count;NOT NULL" json:"favorite_count"`
 }
 
+// Fans 粉丝表
 // Fans 粉丝表
 // 粉丝表（关注表）当用户A关注用户B时添加一条数据，反之删除对应数据
 type Fans struct {
@@ -51,7 +52,7 @@ type Video struct {
 	PlayUrl        string    `gorm:"column:play_url;NOT NULL" json:"play_url"`               // 播放地址
 	CoverUrl       string    `gorm:"column:cover_url;NOT NULL" json:"cover_url"`             // 封面地址
 	Title          string    `gorm:"column:title;NOT NULL" json:"title"`                     // 标题
-	FavouriteCount int       `gorm:"column:favourite_count;NOT NULL" json:"favourite_count"` // 点赞数
+	favoriteCount int       `gorm:"column:favorite_count;NOT NULL" json:"favorite_count"` // 点赞数
 	PlayCounts     int       `gorm:"column:play_counts;NOT NULL" json:"play_counts"`         // 播放次数
 	CommentCount   int       `gorm:"column:comment_count;NOT NULL" json:"comment_count"`     // 评论次数
 	CreateTime     time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"`
@@ -68,14 +69,12 @@ type Favorite struct {
 	UpdateTime time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"update_time"`
 }
 
-// 消息表
+
+
 type Message struct {
-	ID int64 `gorm:"column:id;AUTO_INCREMENT;primary_key" json:"id"`
-	SendUserID int64 `gorm:"column:send_user_id;NOT NULL" json:"send_user_id"`
-	ReceiveUserID int64 `gorm:"column:receive_user_id;NOT NULL" json:"receive_user_id"`
-	Content string `gorm:"column:content;NOT NULL" json:"content"`
-	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"`
+	ID            int64     `gorm:"column:id;AUTO_INCREMENT;primary_key" json:"id"`
+	SendUserID    int64     `gorm:"column:send_user_id;NOT NULL" json:"send_user_id"`       // 发送方id
+	ReceiveUserID int64     `gorm:"column:receive_user_id;NOT NULL" json:"receive_user_id"` // 接收方id
+	Content       string    `gorm:"column:content;NOT NULL" json:"content"`                 // 内容
+	CreateTime    time.Time `gorm:"column:create_time;NOT NULL" json:"create_time"`         // 创建时间（发送时间）
 }
-
-
-
