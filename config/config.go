@@ -1,5 +1,10 @@
 package config
 
+var (
+	mysqlConfig  = &MysqlConfig{Timeout: "10s", MaxOpenConns: 100, MaxIdleConns: 20}
+	serverConfig ServerConfig
+)
+
 type MysqlConfig struct {
 	UserName     string `json:"username"`
 	Password     string `json:"password"`
