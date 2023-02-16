@@ -2,24 +2,12 @@ package service
 
 import (
 	"DouYIn/common"
-)
-
-func PublishList(userId int64) ([]common.Video, error) {
-	videoList, err := videoDao.GetPublishList(userId)
-	if err != nil {
-		return videoList, err
-	}
-	return videoList, nil
-}
-package service
-
-import (
-	"DouYIn/common"
 	"context"
+	"log"
+
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/sms/bytes"
 	"github.com/qiniu/go-sdk/v7/storage"
-	"log"
 )
 
 var (
@@ -74,7 +62,7 @@ func UploadDataToOSS(data []byte, videoName string) error {
 	return nil
 }
 
-func PublishList(userId int64) ([]common.Video, error) {
+func PublishList(userId int64) ([]common.VideoVO, error) {
 	videoList, err := videoDao.GetPublishList(userId)
 	if err != nil {
 		return videoList, err

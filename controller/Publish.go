@@ -4,8 +4,6 @@ import (
 	"DouYIn/common"
 	"DouYIn/service"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"io"
 	"log"
 	"net/http"
@@ -13,6 +11,9 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
 //type UserPublishRequest struct {
@@ -39,6 +40,26 @@ var (
 	}
 )
 
+type PublishListRequest struct {
+	UserId int64  `form:"user_id" json:"user_id" binding:"required"`
+	Token  string `form:"token" json:"token" binding:"required" `
+}
+
+type PublishListResponse struct {
+	common.Response
+	PublishList []common.VideoVO `json:"video_list" binding:"required"`
+}
+
+/*
+ 视频发布错误
+*/
+func PublishVideoError(c *gin.Context, msg string) {
+	c.JSON(http.StatusInternalServerError, common.Response{StatusCode: 1, StatusMsg: msg})
+}
+
+/*
+ 视频投稿
+*/
 func Publish(c *gin.Context) {
 
 	title := c.PostForm("title")
@@ -54,36 +75,36 @@ func Publish(c *gin.Context) {
 
 		open, err := file.Open()
 		if err != nil {
-			PublishVideoError(c, "上传文件数据有误，无法读取")
+			PublishVideoError(c, "上传文件数据有误，无法读取！")
 			return
 		}
 		defer open.Close()
 		size := file.Size
 		bytes := make([]byte, size)
 		if _, err := open.Read(bytes); err != nil {
-			PublishVideoError(c, "文件读取错误")
+			PublishVideoError(c, "文件读取错误！")
 			return
 		}
 
 		ext := filepath.Ext(file.Filename) // 得到后缀
 		// 上传合法性判断
 		if _, ok := videoIndexMap[ext]; !ok {
-			PublishVideoError(c, "视频格式不支持")
+			PublishVideoError(c, "视频格式不支持！")
 			return
 		}
 
 		index := strings.LastIndex(file.Filename, ".")
 		newfileName := file.Filename[0:index]
 
-		UserIDAny, _ := c.Get("UserID")
-		UserID, _ := strconv.ParseInt(fmt.Sprintf("%v", UserIDAny), 0, 64)
+		userIdAny, _ := c.Get("userId")
+		userId, _ := strconv.ParseInt(fmt.Sprintf("%v", userIdAny), 0, 64)
 
 		// 拼接视频文件名 用户id+视频title
-		videoName := strconv.FormatInt(UserID, 10) + "-" + newfileName + ".mp4"
-		coverName := strconv.FormatInt(UserID, 10) + "-" + newfileName + ".jpg"
+		videoName := strconv.FormatInt(userId, 10) + "-" + newfileName + ".mp4"
+		coverName := strconv.FormatInt(userId, 10) + "-" + newfileName + ".jpg"
 
 		// 上传到数据库
-		err = service.AddVideo(bytes, videoName, coverName, UserID, title)
+		err = service.AddVideo(bytes, videoName, coverName, userId, title)
 		//if err != nil {
 		//	PublishVideoError(c, err.Error())
 		//	return
@@ -128,7 +149,7 @@ func Publish(c *gin.Context) {
 		openFile.Close()
 		err = os.Remove(tmpCoverUrl)
 		if err != nil {
-			log.Println("临时图片移除失败")
+			log.Println("临时图片移除失败！")
 			return
 		}
 	}
@@ -140,7 +161,27 @@ func Publish(c *gin.Context) {
 	c.JSON(200, response)
 }
 
-// 返回错误
-func PublishVideoError(c *gin.Context, msg string) {
-	c.JSON(http.StatusInternalServerError, common.Response{StatusCode: 1, StatusMsg: msg})
+/*
+ 发布列表
+*/
+func PublishList(c *gin.Context) {
+	var request PublishListRequest
+	var response = &PublishListResponse{}
+	if err := c.Bind(&request); err != nil {
+		response.Response = common.Response{StatusCode: 1, StatusMsg: "request参数绑定失败！"}
+		c.JSON(400, response)
+		log.Println("request参数绑定失败：", err)
+		return
+	}
+
+	userId := request.UserId
+	videoList, _ := service.PublishList(userId)
+
+	log.Println(videoList)
+
+	// response
+	response.StatusCode = 0
+	response.StatusMsg = "success"
+	response.PublishList = videoList
+	c.JSON(200, response)
 }

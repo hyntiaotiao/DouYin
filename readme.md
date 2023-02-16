@@ -1,19 +1,15 @@
 
 一个伟大的作品
 
-# hjc 2023.02.03更新
-## 更新的结构
+## 项目结构优化
+一、命名规范
+1. 将同一类型的接口合并在一个go文件中，如Login和Register接口合并在User.go中
+2. 将原本的like改为favorite
+3. service层命名与controller层统一
+4. common中的对象结构体添加VO后缀，与repository的model区分
+5. 局部变量统一采用小驼峰法，全局变量全字母大写，函数/方法、结构体、结构体字段统一采用大驼峰法
 
-DOUYIN
-- controller
-    - MessageChat: 返回聊天记录
+二、添加容错
+1. 在控制台中输出错误信息
 
-- repository
-    - message: message对应的user1和user2的返回
-    - model: message的model
-    - video: 更改错误的字段
-
-- service
-    - MessageService: message service层
-
-main.go 开放"/message/chat/"接口
+三、

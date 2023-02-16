@@ -57,7 +57,7 @@ func NewVideoDaoInstance() *VideoDao {
 	return videoDao
 }
 
-func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.Video, error) {
+func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.VideoVO, error) {
 	VideoListSQL := " select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favorite_count," +
 		" video.author_id,user.username as name,user.follow_count,user.follower_count," +
 		" IFNULL( (SELECT 1 FROM	favorite WHERE favorite.user_id = " + fmt.Sprintf("%v", UserID) + " and favorite.video_id = video.id LIMIT 1) , false ) as is_favorite," +
@@ -66,7 +66,7 @@ func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.Video, error) {
 		" on video.author_id = user.id" +
 		" order by video.create_time"
 	Db.Raw(VideoListSQL).Scan(&video_result)
-	var VideoList = make([]common.Video, len(video_result))
+	var VideoList = make([]common.VideoVO, len(video_result))
 	for i := 0; i < len(video_result); i++ {
 		VideoList[i].Author.Id = video_result[i].AuthorId
 		VideoList[i].Author.FollowCount = video_result[i].FollowCount
@@ -84,7 +84,7 @@ func (videoDao *VideoDao) GetPublishList(UserID int64) ([]common.Video, error) {
 	return VideoList, nil
 }
 
-func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]common.Video, int64, error) {
+func (videoDao VideoDao) GetVideos(amount int, UserID int64, LatestTime int64) ([]common.VideoVO, int64, error) {
 	var VideoListSQL string
 	var NextTimeSQL string
 	if UserID == -1 {
@@ -112,7 +112,7 @@ func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]
 	Db.Raw(VideoListSQL).Scan(&video_result)
 	var NextTime int64
 	Db.Raw(NextTimeSQL).Scan(&NextTime)
-	var VideoList = make([]common.Video, len(video_result))
+	var VideoList = make([]common.VideoVO, len(video_result))
 	for i := 0; i < len(video_result); i++ {
 		VideoList[i].Author.Id = video_result[i].AuthorId
 		VideoList[i].Author.FollowCount = video_result[i].FollowCount
@@ -130,7 +130,7 @@ func (videoDao VideoDao) GetVideos(amount int, UserID any, LatestTime int64) ([]
 	return VideoList, NextTime, nil
 }
 
-func (videoDao VideoDao) GetLikeList(MyID int64, UserID int64) ([]common.Video, error) {
+func (videoDao VideoDao) GetLikeList(MyID int64, UserID int64) ([]common.VideoVO, error) {
 
 	var res []result
 	VideoListSQL := "select video.id,video.play_url,video.cover_url,video.title,video.comment_count,video.favorite_count ," +
@@ -143,7 +143,7 @@ func (videoDao VideoDao) GetLikeList(MyID int64, UserID int64) ([]common.Video, 
 		" where IFNULL( (SELECT 1 FROM favorite WHERE favorite.user_id =  " + fmt.Sprintf("%v", MyID) +
 		" and favorite.video_id = video.id LIMIT 1) , false )  = 1"
 	Db.Raw(VideoListSQL).Scan(&res)
-	var VideoList = make([]common.Video, len(res))
+	var VideoList = make([]common.VideoVO, len(res))
 	for i := 0; i < len(res); i++ {
 		VideoList[i].Author.Id = res[i].AuthorId
 		VideoList[i].Author.FollowCount = res[i].FollowCount

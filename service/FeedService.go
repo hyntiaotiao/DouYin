@@ -11,7 +11,7 @@ var (
 )
 
 // Feed 返回指定投稿时间之后的amount个视屏
-func Feed(amount int, UserId any, LatestTime ...int64) ([]common.Video, int64, error) {
+func Feed(amount int, UserId int64, LatestTime ...int64) ([]common.VideoVO, int64, error) {
 	var latestTime int64 = 0
 	if len(LatestTime) == 1 {
 		latestTime = LatestTime[0]

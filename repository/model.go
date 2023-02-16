@@ -52,7 +52,7 @@ type Video struct {
 	PlayUrl        string    `gorm:"column:play_url;NOT NULL" json:"play_url"`               // 播放地址
 	CoverUrl       string    `gorm:"column:cover_url;NOT NULL" json:"cover_url"`             // 封面地址
 	Title          string    `gorm:"column:title;NOT NULL" json:"title"`                     // 标题
-	favoriteCount int       `gorm:"column:favorite_count;NOT NULL" json:"favorite_count"` // 点赞数
+	FavoriteCount int       `gorm:"column:favorite_count;NOT NULL" json:"favorite_count"` // 点赞数
 	PlayCounts     int       `gorm:"column:play_counts;NOT NULL" json:"play_counts"`         // 播放次数
 	CommentCount   int       `gorm:"column:comment_count;NOT NULL" json:"comment_count"`     // 评论次数
 	CreateTime     time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"`
@@ -68,9 +68,6 @@ type Favorite struct {
 	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_time"`
 	UpdateTime time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;NOT NULL" json:"update_time"`
 }
-
-
-
 type Message struct {
 	ID            int64     `gorm:"column:id;AUTO_INCREMENT;primary_key" json:"id"`
 	SendUserID    int64     `gorm:"column:send_user_id;NOT NULL" json:"send_user_id"`       // 发送方id

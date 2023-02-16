@@ -11,7 +11,7 @@ import (
 )
 
 type MyClaims struct {
-	UserID int64 `json:"user_id"`
+	UserId int64 `json:"user_id"`
 	jwt.StandardClaims
 }
 
@@ -52,9 +52,10 @@ func JwtVerify(c *gin.Context) {
 	//过滤是否验证token
 	currentRouter := c.Request.RequestURI //获取当前路由 "
 	index := strings.Index(currentRouter, "?")
-	if index != -1 {
-		currentRouter = currentRouter[0:index] //去掉query参数
+	if index == -1 {
+		panic("当前路由未携带任何参数：" + currentRouter)
 	}
+	currentRouter = currentRouter[0:index] //去掉query参数
 	status, ok := NotNeedToken[currentRouter]
 	if ok && status == 0 { //不需要验证token
 		log.Println(currentRouter + "：当前路径不需要token验证")
@@ -77,7 +78,7 @@ func JwtVerify(c *gin.Context) {
 	if err != nil {
 		panic("invalid token")
 	}
-	c.Set("UserID", claims.UserID) //后续可以使用c.Get(UserID)获取到用户ID
+	c.Set("userId", claims.UserId) //后续可以使用c.Get(userId)获取到用户ID
 }
 
 // ParseToken 解析JWT

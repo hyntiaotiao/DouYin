@@ -31,18 +31,19 @@ type FriendListResponse struct {
 }
 
 type RelationActionRequest struct {
-	Token    string `form:"token" json:"token" binding:"required"`
-	ToUserID int64  `form:"to_user_id" json:"to_user_id" binding:"required"`
-	// 1关注 2取消
-	ActionType int `form:"action_type" json:"action_type" binding:"required"`
+	Token      string `form:"token" json:"token" binding:"required"`
+	ToUserID   int64  `form:"to_user_id" json:"to_user_id" binding:"required"`
+	ActionType int    `form:"action_type" json:"action_type" binding:"required"` // 1关注 2取消
 }
 
-// FollowList 获取登录用户关注的所有用户列表，两种情况下调用该接口：
-//  1. 用户A查看自己的关注列表
-//  2. 用户B查看用户A的关注列表
+/*
+用户关注列表：获取登录用户关注的所有用户列表，两种情况下调用该接口：
+1. 用户A查看自己的关注列表
+2. 用户B查看用户A的关注列表
+*/
 func FollowList(c *gin.Context) {
 	targetId, _ := strconv.Atoi(c.Query("user_id"))
-	curUserId, _ := c.Get("UserID")
+	curUserId, _ := c.Get("userId")
 	var response = &FollowListResponse{}
 	followeeList := service.FindFolloweeList(int64(targetId))
 	response.StatusCode = 0
@@ -65,12 +66,14 @@ func FollowList(c *gin.Context) {
 	c.JSON(200, response)
 }
 
-// FollowerList 获取登录用户关注的所有粉丝列表，两种情况下调用该接口：
-//  1. 用户A查看自己的粉丝列表
-//  2. 用户B查看用户A粉丝列表
+/*
+用户粉丝列表：获取登录用户关注的所有粉丝列表，两种情况下调用该接口：
+1. 用户A查看自己的粉丝列表
+2. 用户B查看用户A粉丝列表
+*/
 func FollowerList(c *gin.Context) {
 	targetId, _ := strconv.Atoi(c.Query("user_id"))
-	curUserId, _ := c.Get("UserID")
+	curUserId, _ := c.Get("userId")
 	var response = &FollowListResponse{}
 	followerList := service.FindFollowerList(int64(targetId))
 	response.StatusCode = 0
@@ -87,9 +90,10 @@ func FollowerList(c *gin.Context) {
 	c.JSON(200, response)
 }
 
-// FriendList 获取登录用户关注的所有粉丝列表，一种情况下调用该接口：
-//
-//	用户A查看自己的好友列表
+/*
+用户好友列表：获取登录用户关注的所有粉丝列表，一种情况下调用该接口：
+1. 用户A查看自己的好友列表
+*/
 func FriendList(c *gin.Context) {
 	targetId, _ := strconv.Atoi(c.Query("user_id"))
 	curUserId, _ := c.Get("UserID")
@@ -122,7 +126,9 @@ func FriendList(c *gin.Context) {
 	c.JSON(200, response)
 }
 
-// RelationAction 关注
+/*
+关注操作
+*/
 func RelationAction(c *gin.Context) {
 	var request RelationActionRequest
 	var response = &common.Response{}

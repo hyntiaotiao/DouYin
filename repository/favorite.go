@@ -8,24 +8,24 @@ import (
 	"gorm.io/gorm"
 )
 
-type LikeDao struct{}
+type FavoriteDao struct{}
 
 var (
-	likeOnce sync.Once
-	likeDao  *LikeDao
+	favoriteOnce sync.Once
+	favoriteDao  *FavoriteDao
 )
 
-func NewLikeDaoInstance() *LikeDao {
-	//不论NewLikeDaoInstance()被调用多少次，Do中的内容只会调用一次
-	likeOnce.Do(
+func NewFavoriteDaoInstance() *FavoriteDao {
+	//不论NewFavoriteDaoInstance()被调用多少次，Do中的内容只会调用一次
+	favoriteOnce.Do(
 		func() {
 			//在Go语言中，对结构体进行&取地址操作时，视为对该类型进行一次 new 的实例化操作
-			likeDao = &LikeDao{}
+			favoriteDao = &FavoriteDao{}
 		})
-	return likeDao
+	return favoriteDao
 }
 
-func (likeDao *LikeDao) GetLikeByUserIDAndVideoID(UserID int64, VideoId int64) (Favorite, error) {
+func (favoriteDao *FavoriteDao) GetFavoriteByUserIDAndVideoID(UserID int64, VideoId int64) (Favorite, error) {
 	f := Favorite{}
 	result := Db.Where("user_id = ? and video_id = ?", UserID, VideoId).Take(&f)
 	//错误处理
@@ -39,8 +39,8 @@ func (likeDao *LikeDao) GetLikeByUserIDAndVideoID(UserID int64, VideoId int64) (
 	return f, nil
 }
 
-// InsertLike 插入点赞数据
-func (likeDao *LikeDao) InsertLike(UserID int64, VideoId int64) error {
+// InsertFavorite 插入点赞数据
+func (favoriteDao *FavoriteDao) InsertFavorite(UserID int64, VideoId int64) error {
 	// 一个事务
 	tx := Db.Begin()
 
@@ -69,8 +69,8 @@ func (likeDao *LikeDao) InsertLike(UserID int64, VideoId int64) error {
 	return nil
 }
 
-// DeleteLike 取消点赞
-func (likeDao *LikeDao) DeleteLike(UserID int64, VideoId int64) error {
+// DeleteFavorite 取消点赞
+func (favoriteDao *FavoriteDao) DeleteFavorite(UserID int64, VideoId int64) error {
 	// 一个事务
 	tx := Db.Begin()
 
