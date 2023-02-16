@@ -1,11 +1,16 @@
 package main
 
 import (
+	"DouYIn/config"
 	"DouYIn/controller"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+)
+
+var (
+	serverConfig config.ServerConfig
 )
 
 func main() {
@@ -20,7 +25,7 @@ func main() {
 	//r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
-func initConfig() {
+func initConfig() (run_server string) {
 	v := viper.New()
 	configFileName := "application.yml"
 	v.SetConfigFile("./" + configFileName)
@@ -34,11 +39,17 @@ func initConfig() {
 		}
 	}
 
-	// 读取文件配置项
-	if err := v.UnmarshalKey("mysql", &config.mysqlConfig); err != nil {
+	if err := v.UnmarshalKey("mysql", config.MYSQL_CONFIG); err != nil {
 		panic(err)
 	}
-	fmt.Println(mysqlConfig)
+	fmt.Println("mysql config: ", config.MYSQL_CONFIG)
+
+	if err := v.UnmarshalKey("server", config.SERVER_CONFIG); err != nil {
+		panic(err)
+	}
+	fmt.Println("server config: ", config.SERVER_CONFIG)
+	run_server = config.SERVER_CONFIG.Host + ":" + fmt.Sprint(config.SERVER_CONFIG.Port)
+	return run_server
 }
 
 func initRouter(r *gin.Engine) {
