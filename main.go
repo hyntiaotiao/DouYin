@@ -1,8 +1,10 @@
 package main
 
 import (
+	"DouYin/config"
 	"DouYin/controller"
 	"DouYin/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +20,7 @@ func main() {
 	r.MaxMultipartMemory = 128 << 20 //设置视频最大上传容量
 
 	//启动
-	r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":" + fmt.Sprint(config.SERVER_CONFIG.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 // 初始化路由
