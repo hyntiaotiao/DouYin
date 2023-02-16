@@ -2,6 +2,7 @@ package service
 
 import (
 	"DouYIn/repository"
+	"DouYIn/utils"
 	"errors"
 	"log"
 )
@@ -30,7 +31,12 @@ func GetByUserName(username string) (repository.User, error) {
 }
 
 func Register(Username string, Password string) (int64, error) {
-	user, err := userDao.InsertUser(Username, Password)
+	encryptedPassword, err := utils.GeneratePassword(Password)
+	if err != nil {
+		log.Println("注册时，密码加密失败")
+		return 0, err
+	}
+	user, err := userDao.InsertUser(Username, encryptedPassword)
 	if err != nil {
 		log.Println("service.Register error")
 		return user.ID, err
@@ -39,11 +45,14 @@ func Register(Username string, Password string) (int64, error) {
 }
 
 func Login(Username string, Password string) (int64, error) {
+	//先检查用户是否存在
 	user, err := userDao.GetByUsername(Username)
 	if err != nil {
-		return 0, err
+		return 0, errors.New("用户不存在")
 	}
-	if user.Password != Password { //密码不正确
+	//验证密码
+	err = utils.VerifyPassword(Password, user.Password)
+	if err != nil { //密码不正确
 		return 0, errors.New("密码错误")
 	}
 	return user.ID, nil
