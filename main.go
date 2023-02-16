@@ -4,7 +4,6 @@ import (
 	"DouYIn/config"
 	"DouYIn/controller"
 	"fmt"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -14,18 +13,20 @@ var (
 	serverConfig config.ServerConfig
 )
 
+func init() {
+
+	initConfig()
+
+}
+
 func main() {
-	log.Println("开始！")
-
-	run_server := initConfig()
-
 	r := gin.Default()
 
 	//r.Use(utils.JwtVerify) // Jwt验证中间件
 
 	initRouter(r)
 
-	r.Run(run_server) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(config.SERVER_CONFIG.Host + ":" + fmt.Sprint(config.SERVER_CONFIG.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func initConfig() (run_server string) {
