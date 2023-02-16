@@ -3,15 +3,22 @@ package main
 import (
 	"DouYIn/config"
 	"DouYIn/controller"
+	"DouYIn/utils"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	run()
+
+}
+
+func run() {
 	r := gin.Default()
 
-	//r.Use(utils.JwtVerify) // Jwt验证中间件
+	r.Use(utils.JwtVerify) // Jwt验证中间件
 
 	initRouter(r)
 

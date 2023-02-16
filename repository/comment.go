@@ -36,7 +36,6 @@ func NewCommentDaoInstance() *CommentDao {
 }
 
 func (commentDao *CommentDao) GetCommentList(videoID int64) ([]common.CommentVO, error) {
-	var commentList = make([]common.CommentVO, len(comment_result))
 	commentListSQL := " select comment.id,comment.content,comment.create_time,comment.publisher_id," +
 		" user.username as name,user.follow_count,user.follower_count," +
 		" IFNULL( (SELECT 1 FROM fans WHERE fans.fans_id = 1 and fans.blogger_id = 1 LIMIT 1) , false ) as is_follow" +
@@ -45,6 +44,7 @@ func (commentDao *CommentDao) GetCommentList(videoID int64) ([]common.CommentVO,
 		" where comment.video_id = " + fmt.Sprintf("%v", videoID) +
 		" order by comment.create_time desc"
 	Db.Raw(commentListSQL).Scan(&comment_result)
+	var commentList = make([]common.CommentVO, len(comment_result))
 	for i := 0; i < len(comment_result); i++ {
 		commentList[i].Id = comment_result[i].Id
 		commentList[i].Content = comment_result[i].Content

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -19,10 +20,10 @@ var Db *gorm.DB
 var newLogger = logger.New(
 	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
 	logger.Config{
-		//SlowThreshold:             0,             // 慢 SQL 阈值
-		LogLevel: logger.Info, // 日志级别
-		//IgnoreRecordNotFoundError: true,          // 忽略ErrRecordNotFound（记录未找到）错误
-		//Colorful:                  false,         // 禁用彩色打印
+		SlowThreshold:             time.Duration(config.LOGGER_CONFIG.SlowThreshold), // 慢 SQL 阈值
+		LogLevel:                  config.LOGGER_CONFIG.LogLevel,                     // 日志级别
+		IgnoreRecordNotFoundError: config.LOGGER_CONFIG.IgnoreRecordNotFoundError,    // 忽略ErrRecordNotFound（记录未找到）错误
+		Colorful:                  config.LOGGER_CONFIG.Colorful,                     // 禁用彩色打印
 	},
 )
 
@@ -36,7 +37,7 @@ func init() {
 	// gorm.Config 参考 https://gorm.io/docs/gorm_config.html
 	_db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true, // 如果设置为true,则`User`的默认表名为`user`,使用`TableName`设置的表名不受影响
+			SingularTable: config.MYSQL_CONFIG.SingularTable, // 如果设置为true,则`User`的默认表名为`user`,使用`TableName`设置的表名不受影响
 		},
 		Logger: newLogger,
 	})
@@ -49,5 +50,4 @@ func init() {
 	//设置数据库连接池参数
 	sqlDB.SetMaxOpenConns(config.MYSQL_CONFIG.MaxOpenConns)
 	sqlDB.SetMaxIdleConns(config.MYSQL_CONFIG.MaxIdleConns)
-
 }
