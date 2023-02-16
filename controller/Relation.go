@@ -10,8 +10,8 @@ import (
 )
 
 type FollowListRequest struct {
-	UserId int64  `json:"user_id" binding:"required"`
-	Token  string `json:"token" binding:"required"`
+	UserId int64  `json:"user_id" validator:"required,gt=0"`
+	Token  string `json:"token" validator:"required"`
 }
 
 type FollowListResponse struct {
@@ -31,9 +31,10 @@ type FriendListResponse struct {
 }
 
 type RelationActionRequest struct {
-	Token      string `form:"token" json:"token" binding:"required"`
-	ToUserID   int64  `form:"to_user_id" json:"to_user_id" binding:"required"`
-	ActionType int    `form:"action_type" json:"action_type" binding:"required"` // 1关注 2取消
+	Token    string `form:"token" json:"token" validator:"required"`
+	ToUserID int64  `form:"to_user_id" json:"to_user_id" validator:"required,gt=0"`
+	// 1关注 2取消
+	ActionType int `form:"action_type" json:"action_type" validator:"required,gt=0,lt=3"`
 }
 
 /*

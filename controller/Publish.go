@@ -41,8 +41,8 @@ var (
 )
 
 type PublishListRequest struct {
-	UserId int64  `form:"user_id" json:"user_id" binding:"required"`
-	Token  string `form:"token" json:"token" binding:"required" `
+	UserId int64  `form:"user_id" json:"user_id" validator:"required,gt=0"`
+	Token  string `form:"token" json:"token" validator:"required" `
 }
 
 type PublishListResponse struct {
@@ -51,14 +51,14 @@ type PublishListResponse struct {
 }
 
 /*
- 视频发布错误
+视频发布错误
 */
 func PublishVideoError(c *gin.Context, msg string) {
 	c.JSON(http.StatusInternalServerError, common.Response{StatusCode: 1, StatusMsg: msg})
 }
 
 /*
- 视频投稿
+视频投稿
 */
 func Publish(c *gin.Context) {
 
@@ -162,7 +162,7 @@ func Publish(c *gin.Context) {
 }
 
 /*
- 发布列表
+发布列表
 */
 func PublishList(c *gin.Context) {
 	var request PublishListRequest

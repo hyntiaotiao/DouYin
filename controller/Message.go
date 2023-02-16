@@ -11,15 +11,16 @@ import (
 var messageIdSequence = int64(1)
 
 type MessageActionRequest struct {
-	Token      string `form:"token" json:"token" binding:"required"`
-	ToUserId   int64  `form:"to_user_id" json:"to_user_id" binding:"required"`
-	ActionType string `form:"action_type" json:"action_type" binding:"required"` //“1”发送消息
-	Content    string `form:"content" json:"content" binding:"required"`
+	token    string `form:"token" json:"token" validator:"required"`
+	ToUserId int64  `form:"to_user_id" json:"to_user_id" validator:"required,gt=0"`
+	//“1”发送消息
+	ActionType string `form:"action_type" json:"action_type" validator:"required,gte=1,lte1"`
+	Content    string `form:"content" json:"content" validator:"required"`
 }
 
 type MessageChatRequest struct {
-	Token    string `form:"token" json:"token" binding:"required"`
-	ToUserId int64  `form:"to_user_id" json:"to_user_id" binding:"required"`
+	Token    string `form:"token" json:"token" validator:"required"`
+	ToUserId int64  `form:"to_user_id" json:"to_user_id" validator:"required,gt=0"`
 }
 
 type MessageChatResponse struct {

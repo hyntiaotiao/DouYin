@@ -12,11 +12,11 @@ import (
 )
 
 type CommentActionRequest struct {
-	VideoId     int64  `form:"video_id" json:"video_id"`
-	Token       string `form:"token" json:"token"`
-	ActionType  int32  `form:"action_type" json:"action_type"`
-	CommentId   int64  `form:"comment_id" json:"comment_id,omitempty"`
-	CommentText string `form:"comment_text" json:"comment_text,omitempty"`
+	VideoId     int64  `form:"video_id" json:"videoId" validator:"required,gt=0"`
+	Token       string `form:"token" json:"token" validator:"required"`
+	ActionType  int32  `form:"action_type" json:"action_type" validator:"required,gte=1,lte=2"` //2删除评论，1发表评论
+	CommentId   int64  `form:"comment_id" json:"comment_id,omitempty" validator:"required,gt=0"`
+	CommentText string `form:"comment_text" json:"comment_text,omitempty" validator:"omitempty"`
 }
 
 type CommentActionResponse struct {
@@ -25,8 +25,8 @@ type CommentActionResponse struct {
 }
 
 type CommentListRequest struct {
-	VideoId int64  `form:"video_id" json:"video_id"`
-	Token   string `form:"token" json:"token"`
+	VideoId int64  `form:"video_id" json:"videoId" validator:"required,gt=0"`
+	Token   string `form:"token" json:"token" validator:"required"`
 }
 
 type CommentListResponse struct {

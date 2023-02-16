@@ -9,8 +9,8 @@ import (
 )
 
 type VideoFeedRequest struct {
-	LatestTime int64  `form:"latest_time" json:"latest_time" binding:"omitempty"`
-	Token      string `form:"token" json:"token" binding:"omitempty"`
+	LatestTime int64  `form:"latest_time" json:"latest_time" validator:"omitempty"`
+	Token      string `form:"token" json:"token" validator:"omitempty"`
 }
 
 type VideoFeedResponse struct {

@@ -12,8 +12,8 @@ import (
 )
 
 type UserInfoRequest struct {
-	UserId int64  `form:"user_id" json:"user_id"`
-	Token  string `form:"token" json:"token"`
+	UserId int64  `form:"user_id" json:"user_id" validator:"required,gt=0"`
+	Token  string `form:"token" json:"token" validator:"required"`
 }
 
 type UserInfoResponse struct {
@@ -22,8 +22,8 @@ type UserInfoResponse struct {
 }
 
 type UserLoginRequest struct {
-	UserName string `form:"username" json:"username" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
+	Username string `form:"username" json:"username" validator:"required,min=6,max = 20"`
+	Password string `form:"password" json:"password" validator:"required,min=6,max = 20"`
 }
 
 type UserLoginResponse struct {
@@ -33,8 +33,8 @@ type UserLoginResponse struct {
 }
 
 type UserRegisterRequest struct {
-	Username string `form:"username" json:"username" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
+	Username string `form:"username" json:"username" validator:"required,min=6,max = 20"` //用户名长度最短6最长20
+	Password string `form:"password" json:"password" validator:"required,min=6,max = 20"` //密码长度最短6最长20
 }
 
 type UserRegisterResponse struct {
@@ -97,7 +97,7 @@ func Login(c *gin.Context) {
 		log.Println("request参数绑定失败")
 		return
 	}
-	userId, err := service.Login(request.UserName, request.Password)
+	userId, err := service.Login(request.Username, request.Password)
 	if err != nil {
 		log.Println(err)
 	}
