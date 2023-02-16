@@ -6,18 +6,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 )
-
-var (
-	serverConfig config.ServerConfig
-)
-
-func init() {
-
-	initConfig()
-
-}
 
 func main() {
 	r := gin.Default()
@@ -27,34 +16,6 @@ func main() {
 	initRouter(r)
 
 	r.Run(config.SERVER_CONFIG.Host + ":" + fmt.Sprint(config.SERVER_CONFIG.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-}
-
-func initConfig() (run_server string) {
-	v := viper.New()
-	configFileName := "application.yml"
-	v.SetConfigFile("./" + configFileName)
-	v.SetConfigType("yaml")
-	// 加载配置文件内容
-	if err := v.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			fmt.Println(configFileName + "配置文件没找到.")
-		} else {
-			fmt.Println("读取配置文件发生错误：", err)
-		}
-	}
-
-	if err := v.UnmarshalKey("mysql", config.MYSQL_CONFIG); err != nil {
-		panic(err)
-	}
-	fmt.Println("mysql config: ", config.MYSQL_CONFIG)
-
-	if err := v.UnmarshalKey("server", config.SERVER_CONFIG); err != nil {
-		panic(err)
-	}
-	fmt.Println("server config: ", config.SERVER_CONFIG)
-	run_server = config.SERVER_CONFIG.Host + ":" + fmt.Sprint(config.SERVER_CONFIG.Port)
-	fmt.Println(run_server)
-	return run_server
 }
 
 func initRouter(r *gin.Engine) {
