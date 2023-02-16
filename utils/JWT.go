@@ -78,7 +78,7 @@ func JwtVerify(c *gin.Context) {
 	if err != nil {
 		panic("invalid token")
 	}
-	c.Set("userId", claims.UserId) //后续可以使用c.Get(userId)获取到用户ID
+	c.Set("UserID", claims.UserId) //后续可以使用c.Get(userId)获取到用户ID
 }
 
 // ParseToken 解析JWT

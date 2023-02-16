@@ -96,7 +96,7 @@ func Publish(c *gin.Context) {
 		index := strings.LastIndex(file.Filename, ".")
 		newfileName := file.Filename[0:index]
 
-		userIdAny, _ := c.Get("userId")
+		userIdAny, _ := c.Get("UserID")
 		userId, _ := strconv.ParseInt(fmt.Sprintf("%v", userIdAny), 0, 64)
 
 		// 拼接视频文件名 用户id+视频title

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"DouYIn/config"
 	"fmt"
 	"log"
 	"os"
@@ -27,16 +28,9 @@ var newLogger = logger.New(
 
 // 包初始化函数，golang特性，每个包初始化的时候会自动执行init函数，这里用来初始化gorm。
 func init() {
-	//配置MySQL连接参数
-	username := "root"     //账号
-	password := "123456"   //密码
-	host := "39.101.73.74" //数据库地址，可以是Ip或者域名
-	port := 3306           //数据库端口
-	Dbname := "douyin"     //数据库名
-	timeout := "10s"       //连接超时，10秒
-
 	//拼接下dsn参数, dsn格式可以参考上面的语法，这里使用Sprintf动态拼接dsn参数，因为一般数据库连接参数，我们都是保存在配置文件里面，需要从配置文件加载参数，然后拼接dsn。
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s", username, password, host, port, Dbname, timeout)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%ds", config.MYSQL_CONFIG.Username, config.MYSQL_CONFIG.Password, config.MYSQL_CONFIG.Host, config.MYSQL_CONFIG.Port, config.MYSQL_CONFIG.Dbname, config.MYSQL_CONFIG.Timeout)
+	log.Println("dsn: ", dsn)
 	//连接MYSQL, 获得DB类型实例，用于后面的数据库读写操作。
 	// gorm - v2
 	// gorm.Config 参考 https://gorm.io/docs/gorm_config.html
@@ -53,7 +47,7 @@ func init() {
 	sqlDB, _ := Db.DB()
 
 	//设置数据库连接池参数
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetMaxIdleConns(20)
+	sqlDB.SetMaxOpenConns(config.MYSQL_CONFIG.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(config.MYSQL_CONFIG.MaxIdleConns)
 
 }

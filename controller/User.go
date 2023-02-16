@@ -71,7 +71,7 @@ func UserInfo(c *gin.Context) {
 	//   1.获取 发起当前请求的用户的信息
 	// 		a.如果是未登录的用户，is_follow的值应该为false；
 	// 		b.如果是已经登录的用户，is_follow的值根据fans表中的数据决定
-	userIdAny, _ := c.Get("userId")
+	userIdAny, _ := c.Get("UserID")
 	curUserId, _ := strconv.ParseInt(fmt.Sprintf("%v", userIdAny), 0, 64)
 	if curUserId == targetId {
 		userVO.IsFollow = false

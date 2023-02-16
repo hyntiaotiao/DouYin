@@ -43,7 +43,7 @@ type RelationActionRequest struct {
 */
 func FollowList(c *gin.Context) {
 	targetId, _ := strconv.Atoi(c.Query("user_id"))
-	curUserId, _ := c.Get("userId")
+	curUserId, _ := c.Get("UserID")
 	var response = &FollowListResponse{}
 	followeeList := service.FindFolloweeList(int64(targetId))
 	response.StatusCode = 0
@@ -73,7 +73,7 @@ func FollowList(c *gin.Context) {
 */
 func FollowerList(c *gin.Context) {
 	targetId, _ := strconv.Atoi(c.Query("user_id"))
-	curUserId, _ := c.Get("userId")
+	curUserId, _ := c.Get("UserID")
 	var response = &FollowListResponse{}
 	followerList := service.FindFollowerList(int64(targetId))
 	response.StatusCode = 0

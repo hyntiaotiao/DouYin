@@ -1,17 +1,17 @@
 package config
 
 var (
-	MYSQL_CONFIG  = &MysqlConfig{Timeout: "10s", MaxOpenConns: 100, MaxIdleConns: 20}
+	MYSQL_CONFIG  = &MysqlConfig{Timeout: 10, MaxOpenConns: 100, MaxIdleConns: 20}
 	SERVER_CONFIG = &ServerConfig{}
 )
 
 type MysqlConfig struct {
-	UserName     string `json:"username"`
+	Username     string `json:"username"`
 	Password     string `json:"password"`
 	Host         string `json:"host"`
-	Port         string `json:"port"`
+	Port         int    `json:"port"`
 	Dbname       string `json:"dbName"`
-	Timeout      string `json:"timeout"`
+	Timeout      int    `json:"timeout"`
 	MaxOpenConns int    `json:"maxOpenConns"`
 	MaxIdleConns int    `json:"maxIdleConns"`
 }

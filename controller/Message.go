@@ -37,7 +37,7 @@ func MessageAction(c *gin.Context) {
 		log.Println("request参数绑定失败：", err)
 		return
 	}
-	FromUserId, _ := c.Get("userId")
+	FromUserId, _ := c.Get("UserID")
 	if request.ActionType != "1" {
 		c.JSON(400, "action_type值不为1")
 	}
@@ -63,7 +63,7 @@ func MessageChat(c *gin.Context) {
 		return
 	}
 
-	userIdAny, _ := c.Get("userId")
+	userIdAny, _ := c.Get("UserID")
 	user1 := userIdAny.(int64)
 	user2 := request.ToUserId
 	messageList, err := service.MessageChat(user1, user2)

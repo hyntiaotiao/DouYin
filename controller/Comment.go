@@ -47,7 +47,7 @@ func CommentAction(c *gin.Context) {
 		log.Println("request参数绑定失败：", err)
 		return
 	}
-	userIdAny, _ := c.Get("userId")
+	userIdAny, _ := c.Get("UserID")
 	userId, _ := strconv.ParseInt(fmt.Sprintf("%v", userIdAny), 0, 64)
 	comment, err := service.CommentAction(request.ActionType, request.CommentId, request.VideoId, userId, request.CommentText)
 	if err != nil {
@@ -86,7 +86,6 @@ func CommentAction(c *gin.Context) {
 视频评论列表
 */
 func CommentList(c *gin.Context) {
-	client := resty.New()
 	var request CommentListRequest
 	var response = &CommentListResponse{}
 	if err := c.Bind(&request); err != nil {
@@ -96,33 +95,12 @@ func CommentList(c *gin.Context) {
 		return
 	}
 
-	temp_commentList, err := service.CommentList(request.VideoId)
+	commentList, err := service.CommentList(request.VideoId)
 	if err != nil {
 		response.Response = common.Response{StatusCode: 1, StatusMsg: "获取评论列表失败！"}
 		c.JSON(400, response)
 		log.Println("获取评论列表失败：", err)
 		return
-	}
-	log.Println("获取临时的评论列表：", temp_commentList)
-	commentList := make([]common.CommentVO, len(temp_commentList))
-	for i := range commentList {
-		temp_comment := temp_commentList[i]
-		user := common.UserVO{}
-		user_id := strconv.FormatInt(temp_comment.PublisherID, 10)
-		_, user_err := client.R().
-			SetResult(&user).
-			SetQueryParams(map[string]string{
-				"user_id": user_id,
-				"token":   request.Token,
-			}).
-			Get("http://localhost:8080/douyin/user/")
-		if user_err != nil {
-			log.Println("获取user_id=", user_id, "的用户信息失败：", err)
-		}
-		commentList[i].User = user
-		commentList[i].CreateDate = temp_comment.CreateTime.Format("2006-01-02 15:04:05")
-		commentList[i].Id = temp_comment.ID
-		commentList[i].Content = temp_comment.Content
 	}
 	response.StatusCode = 0
 	response.StatusMsg = "success"

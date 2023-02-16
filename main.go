@@ -4,6 +4,7 @@ import (
 	"DouYIn/config"
 	"DouYIn/controller"
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -14,6 +15,8 @@ var (
 )
 
 func main() {
+	log.Println("开始！")
+
 	run_server := initConfig()
 
 	r := gin.Default()

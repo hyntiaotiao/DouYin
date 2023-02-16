@@ -42,7 +42,7 @@ func FavoriteAction(c *gin.Context) {
 		log.Println("request参数绑定失败：", err)
 		return
 	}
-	userIdAny, _ := c.Get("userId")
+	userIdAny, _ := c.Get("UserID")
 	userId, _ := strconv.ParseInt(fmt.Sprintf("%v", userIdAny), 0, 64)
 	err := service.FavoriteAction(userId, request.VideoId, request.ActionType)
 	if err != nil {
@@ -69,7 +69,7 @@ func FavoriteList(c *gin.Context) {
 		log.Println("request参数绑定失败：", err)
 		return
 	}
-	userIdAny, _ := c.Get("userId")
+	userIdAny, _ := c.Get("UserID")
 	userId, _ := strconv.ParseInt(fmt.Sprintf("%v", userIdAny), 0, 64)
 	VideoList, err := service.FavoriteList(userId, request.UserId)
 	if err != nil {

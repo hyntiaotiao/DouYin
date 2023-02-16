@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"DouYIn/common"
 	"fmt"
 	"log"
 	"sync"
@@ -15,6 +16,17 @@ var (
 
 type CommentDao struct{}
 
+var comment_result []struct {
+	Id            int64  `json:"id"`
+	Publisher_id  int64  `json:"publisher_id"`
+	Name          string `json:"name"`
+	FollowCount   int64  `json:"follow_count"`
+	FollowerCount int64  `json:"follower_count"`
+	IsFollow      bool   `json:"is_follow"`
+	Content       string `json:"content"`
+	CreateDate    string `json:"create_date"`
+}
+
 func NewCommentDaoInstance() *CommentDao {
 	commentOnce.Do(
 		func() {
@@ -23,13 +35,27 @@ func NewCommentDaoInstance() *CommentDao {
 	return commentDao
 }
 
-func (commentDao *CommentDao) GetCommentList(videoID int64) ([]Comment, error) {
-	var comments []Comment
-	commentListSQL := " select comment.id,comment.content,comment.create_time,comment.publisher_id from comment" +
+func (commentDao *CommentDao) GetCommentList(videoID int64) ([]common.CommentVO, error) {
+	var commentList = make([]common.CommentVO, len(comment_result))
+	commentListSQL := " select comment.id,comment.content,comment.create_time,comment.publisher_id," +
+		" user.username as name,user.follow_count,user.follower_count," +
+		" IFNULL( (SELECT 1 FROM fans WHERE fans.fans_id = 1 and fans.blogger_id = 1 LIMIT 1) , false ) as is_follow" +
+		" from comment join user" +
+		" on user.id = comment.publisher_id" +
 		" where comment.video_id = " + fmt.Sprintf("%v", videoID) +
 		" order by comment.create_time desc"
-	Db.Raw(commentListSQL).Scan(&comments)
-	return comments, nil
+	Db.Raw(commentListSQL).Scan(&comment_result)
+	for i := 0; i < len(comment_result); i++ {
+		commentList[i].Id = comment_result[i].Id
+		commentList[i].Content = comment_result[i].Content
+		commentList[i].CreateDate = comment_result[i].CreateDate
+		commentList[i].User.Id = comment_result[i].Publisher_id
+		commentList[i].User.FollowCount = comment_result[i].FollowCount
+		commentList[i].User.FollowerCount = comment_result[i].FollowerCount
+		commentList[i].User.Name = comment_result[i].Name
+		commentList[i].User.IsFollow = comment_result[i].IsFollow
+	}
+	return commentList, nil
 }
 
 func (commentDao *CommentDao) InsertComment(comment *Comment) error {

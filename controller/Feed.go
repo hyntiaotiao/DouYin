@@ -33,7 +33,7 @@ func Feed(c *gin.Context) {
 		return
 	}
 
-	userIdAny, _ := c.Get("userId")
+	userIdAny, _ := c.Get("UserID")
 	var userId int64
 	if userIdAny == nil {
 		userId = -1

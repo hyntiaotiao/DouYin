@@ -1,6 +1,7 @@
 package service
 
 import (
+	"DouYIn/common"
 	"DouYIn/repository"
 )
 
@@ -9,7 +10,7 @@ var (
 )
 
 // CommentList  点赞与取消赞操作
-func CommentList(videoId int64) ([]repository.Comment, error) {
+func CommentList(videoId int64) ([]common.CommentVO, error) {
 	commentList, error := commentDao.GetCommentList(videoId)
 	return commentList, error
 }
