@@ -14,15 +14,15 @@ var (
 )
 
 func main() {
-	initConfig()
+	run_server := initConfig()
 
-	//r := gin.Default()
+	r := gin.Default()
 
 	//r.Use(utils.JwtVerify) // Jwt验证中间件
 
-	//initRouter(r)
+	initRouter(r)
 
-	//r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(run_server) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func initConfig() (run_server string) {
@@ -49,6 +49,7 @@ func initConfig() (run_server string) {
 	}
 	fmt.Println("server config: ", config.SERVER_CONFIG)
 	run_server = config.SERVER_CONFIG.Host + ":" + fmt.Sprint(config.SERVER_CONFIG.Port)
+	fmt.Println(run_server)
 	return run_server
 }
 
